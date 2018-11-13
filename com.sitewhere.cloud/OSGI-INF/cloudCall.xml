@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+               name="org.eclipse.kura.cloud.CloudCallService"
+               activate="activate" deactivate="deactivate">
+   <implementation class="com.sitewhere.cloud.call.CloudCallServiceImpl"/>
+   <service>
+      <provide interface="org.eclipse.kura.cloud.CloudCallService"/>
+   </service>
+   <property name="service.pid" type="String" value="org.eclipse.kura.cloud.CloudCallService"/>
+   <reference name="DataService"
+              policy="static" 
+              cardinality="1..1" 
+              bind="setDataService" 
+              unbind="unsetDataService"
+              interface="org.eclipse.kura.data.DataService"/>
+</scr:component>

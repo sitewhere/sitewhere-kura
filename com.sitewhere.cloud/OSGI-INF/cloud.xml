@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+	activate="activate" 
+	configuration-policy="require" 
+	deactivate="deactivate" 
+	enabled="true" 
+	immediate="false" 
+	modified="updated" 
+	name="com.sitewhere.cloud.SiteWhereCloudService">
+   <implementation class="com.sitewhere.cloud.SiteWhereCloudServiceImpl"/>
+   <service>
+      <provide interface="org.eclipse.kura.cloud.CloudService"/>
+      <provide interface="org.eclipse.kura.configuration.ConfigurableComponent"/>
+      <provide interface="org.eclipse.kura.cloud.CloudPayloadProtoBufEncoder"/>
+      <provide interface="org.eclipse.kura.cloud.CloudPayloadProtoBufDecoder"/>
+      <provide interface="org.eclipse.kura.cloudconnection.request.RequestHandlerRegistry"/>
+      <provide interface="org.eclipse.kura.cloudconnection.CloudConnectionManager"/>
+      <provide interface="org.eclipse.kura.cloudconnection.CloudEndpoint"/>
+   </service>
+   <reference name="DataService" 
+              interface="org.eclipse.kura.data.DataService" 
+              policy="static" 
+              cardinality="1..1" 
+              bind="setDataService" 
+              unbind="unsetDataService"/>
+   <reference name="SystemService" 
+              policy="static"
+              cardinality="1..1"
+              bind="setSystemService"
+              unbind="unsetSystemService"
+              interface="org.eclipse.kura.system.SystemService"/>
+   <reference name="SystemAdminService" 
+              policy="static"
+              cardinality="1..1"
+              bind="setSystemAdminService"
+              unbind="unsetSystemAdminService"
+              interface="org.eclipse.kura.system.SystemAdminService"/>
+   <reference name="NetworkService" 
+              policy="static" 
+              cardinality="1..1" 
+              bind="setNetworkService" 
+              unbind="unsetNetworkService"
+              interface="org.eclipse.kura.net.NetworkService"/>
+   <reference name="PositionService" 
+              cardinality="0..1" 
+              bind="setPositionService" 
+              interface="org.eclipse.kura.position.PositionService" 
+              policy="static" 
+              unbind="unsetPositionService"/>
+   <reference name="EventAdmin"              
+              cardinality="1..1" 
+              policy="static" 
+              bind="setEventAdmin" 
+              unbind="unsetEventAdmin"
+              interface="org.osgi.service.event.EventAdmin"/>
+   <property name="kura.ui.service.hide" type="Boolean" value="true"/>
+</scr:component>
