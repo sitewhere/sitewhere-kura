@@ -786,7 +786,10 @@ public class SiteWhereCloudServiceImpl
                 .append(CloudServiceOptions.getTopicClientIdToken()).append(CloudServiceOptions.getTopicSeparator())
                 .append(CloudServiceOptions.getTopicBirthSuffix());
 
-        String topic = sbTopic.toString();
+        // SiteWhere json topic
+        // "SiteWhere/default/input/json"
+        String topic = this.options.getSiteWhereTopic();
+        
         KuraPayload payload = createBirthPayload();
         publishLifeCycleMessage(topic, payload);
     }
@@ -825,7 +828,8 @@ public class SiteWhereCloudServiceImpl
 
     private KuraPayload createBirthPayload() {
         LifeCyclePayloadBuilder payloadBuilder = new LifeCyclePayloadBuilder(this);
-        return payloadBuilder.buildBirthPayload();
+        // return payloadBuilder.buildBirthPayload();
+        return payloadBuilder.buildDeviceRegistrationPayload();
     }
 
     private KuraPayload createDisconnectPayload() {
@@ -872,7 +876,8 @@ public class SiteWhereCloudServiceImpl
     }
 
     private byte[] encodeJsonPayload(KuraPayload payload) {
-        return CloudPayloadJsonEncoder.getBytes(payload);
+//        return CloudPayloadJsonEncoder.getBytes(payload);
+        return SiteWhereCloudPlayloadJsonEncoder.getBytes(payload);
     }
 
     private KuraPayload createKuraPayloadFromJson(byte[] payload) {

@@ -29,14 +29,17 @@ import org.eclipse.kura.system.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sitewhere.device.DeviceRegistrationPayload;
+import com.sitewhere.device.DeviceRegistrationPayload.DeviceRegistrationPayloadBuilder;
+
 /**
  * Utility class to build lifecycle payload messages.
  */
 public class LifeCyclePayloadBuilder {
 
-    private static final String ERROR = "ERROR";
-
     private static final Logger s_logger = LoggerFactory.getLogger(LifeCyclePayloadBuilder.class);
+
+    private static final String ERROR = "ERROR";
 
     private static final String UNKNOWN = "UNKNOWN";
 
@@ -44,6 +47,23 @@ public class LifeCyclePayloadBuilder {
 
     LifeCyclePayloadBuilder(SiteWhereCloudServiceImpl cloudServiceImpl) {
         this.cloudServiceImpl = cloudServiceImpl;
+    }
+    
+    public DeviceRegistrationPayload buildDeviceRegistrationPayload() {
+	DeviceRegistrationPayloadBuilder builder = new DeviceRegistrationPayloadBuilder();
+	
+        // build device name
+        CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
+        String deviceName = cso.getDeviceDisplayName();
+        if (deviceName == null) {
+            deviceName = this.cloudServiceImpl.getSystemService().getDeviceName();
+        }
+
+        return builder.withDeviceToken(deviceName)
+          .withAreaToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationAreaToken())
+          .withCustomerToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationCustomerToken())
+	  .withDeviceTypeToken(this.cloudServiceImpl.getCloudServiceOptions().getDeviceTypeToken())
+	  .build();
     }
 
     public KuraBirthPayload buildBirthPayload() {

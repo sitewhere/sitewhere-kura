@@ -1,14 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2011, 2018 Eurotech and/or its affiliates
+/*
+ * Copyright (c) SiteWhere, LLC. All rights reserved. http://www.sitewhere.com
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Eurotech
- *******************************************************************************/
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 package com.sitewhere.cloud;
 
 //import static org.eclipse.kura.core.cloud.CloudServiceLifecycleCertsPolicy.DISABLE_PUBLISHING;
@@ -21,6 +17,11 @@ import org.eclipse.kura.system.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * SiteWhere Cloud Service Options for Eclipse Kura.
+ * 
+ * @author Jorge Villaverde
+ */
 public class CloudServiceOptions {
 
     private static final Logger logger = LoggerFactory.getLogger(CloudServiceOptions.class);
@@ -44,9 +45,47 @@ public class CloudServiceOptions {
     private static final String BIRTH_CERT_POLICY = "birth.cert.policy";
     private static final String PAYLOAD_ENCODING = "payload.encoding";
 
+    /** Application Tenant property name */
+    private static final String APPLICATION_TENANT_NAME = "application.tenant";
+
+    /** Application Area Token property name */
+    private static final String APPLICATION_AREA_TOKEN = "application.area";
+
+    /** Default Application Area Token value */
+    private static final String APPLICATION_AREA_TOKEN_DEFAULT = "southeast";
+    
+    /** Application Customer Token property name */
+    private static final String APPLICATION_CUSTOMER_TOKEN = "application.customer";
+
+    /** Default Application Customer Token value */
+    private static final String APPLICATION_CUSTOMER_TOKEN_DEFAULT = "acme";
+
+    /** Device Type Token property name */
+    private static final String DEVICE_TYPE_TOKEN = "device.type";
+
+    /** Default Application Customer Token value */
+    private static final String DEVICE_TYPE_TOKEN_DEFAULT = "raspberrypi";
+    
+    /** SiteWhere Topic Prefix */
+    private static final String SITEWHERE_PREFIX = "SiteWhere";
+
+    /** Default SiteWhere tenant */
+    private static final String APPLICATION_TENANT_NAME_DEFAULT = "default";
+
+    /** INPUT Topic */
+    private static final String INPUT_TOPIC = "input";
+
+    /** JSON Topic */
+    private static final String JSON_TOPIC = "json";
+
+    /** Protocol Buffer Topic */
+    private static final String PROTOBUF_TOPIC = "protobuf";
+    
     private static final int LIFECYCLE_QOS = 0;
     private static final int LIFECYCLE_PRIORITY = 0;
     private static final boolean LIFECYCLE_RETAIN = false;
+
+
 
     private final Map<String, Object> properties;
     private final SystemService systemService;
@@ -199,7 +238,59 @@ public class CloudServiceOptions {
 //        }
         return republishBirt;
     }
+    
+    /**
+     * Returns the application tenant name for the device.
+     *
+     * @return a String value.
+     */
+    public String getApplicationTenantName() {
+        String tenantName = APPLICATION_TENANT_NAME_DEFAULT;
+        if (this.properties != null && this.properties.get(APPLICATION_TENANT_NAME) instanceof String) {
+            tenantName = (String) this.properties.get(APPLICATION_TENANT_NAME);
+        }
+        return tenantName;
+    }
 
+    /**
+     * Returns the application area token for the device.
+     *
+     * @return a String value.
+     */
+    public String getApplicationAreaToken() {
+        String areaToken = APPLICATION_AREA_TOKEN_DEFAULT;
+        if (this.properties != null && this.properties.get(APPLICATION_AREA_TOKEN) instanceof String) {
+            areaToken = (String) this.properties.get(APPLICATION_AREA_TOKEN);
+        }
+        return areaToken;
+    }
+
+    /**
+     * Returns the application area token for the device.
+     *
+     * @return a String value.
+     */
+    public String getApplicationCustomerToken() {
+        String customerToken = APPLICATION_CUSTOMER_TOKEN_DEFAULT;
+        if (this.properties != null && this.properties.get(APPLICATION_CUSTOMER_TOKEN) instanceof String) {
+            customerToken = (String) this.properties.get(APPLICATION_CUSTOMER_TOKEN);
+        }
+        return customerToken;
+    }
+
+    /**
+     * Returns the application area token for the device.
+     *
+     * @return a String value.
+     */
+    public String getDeviceTypeToken() {
+        String deviceTypeToken = DEVICE_TYPE_TOKEN_DEFAULT;
+        if (this.properties != null && this.properties.get(DEVICE_TYPE_TOKEN) instanceof String) {
+            deviceTypeToken = (String) this.properties.get(DEVICE_TYPE_TOKEN);
+        }
+        return deviceTypeToken;
+    }
+       
     /**
      * This method parses the Cloud Service configuration and returns the selected cloud payload encoding.
      * By default, this method returns {@link CloudPayloadEncoding} {@code KURA_PROTOBUF}.
@@ -260,5 +351,26 @@ public class CloudServiceOptions {
 
     public static boolean getLifeCycleMessageRetain() {
         return LIFECYCLE_RETAIN;
+    }
+    
+    public String getSiteWhereTopic() {
+	StringBuilder builder = new StringBuilder();
+	
+	CloudPayloadEncoding encoding = getPayloadEncoding();
+	
+	builder.append(SITEWHERE_PREFIX);
+	builder.append(TOPIC_SEPARATOR);
+	builder.append(getApplicationTenantName());
+	builder.append(TOPIC_SEPARATOR);
+	builder.append(INPUT_TOPIC);
+	builder.append(TOPIC_SEPARATOR);
+	
+	if (CloudPayloadEncoding.KURA_PROTOBUF.equals(encoding)) {
+	    builder.append(PROTOBUF_TOPIC);
+	} else if (CloudPayloadEncoding.SIMPLE_JSON.equals(encoding)) {
+	    builder.append(JSON_TOPIC);
+	}
+		
+	return builder.toString();
     }
 }
