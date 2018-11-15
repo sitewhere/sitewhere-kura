@@ -1,6 +1,7 @@
 package com.sitewhere.cloud;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import org.eclipse.kura.message.KuraPayload;
 
@@ -32,8 +33,26 @@ public class SiteWhereCloudPlayloadJsonEncoder {
         JsonObject jsonRequest = Json.object();
         jsonRequest.add("areaToken", payload.getAreaToken());
         jsonRequest.add("customerToken", payload.getCustomerToken());
-        jsonRequest.add("deviceTypeToken", payload.getDeviceTypeToken());	
+        jsonRequest.add("deviceTypeToken", payload.getDeviceTypeToken());
+        
+        encodeRequestMetadata(payload, jsonRequest);
+        
         json.add("request", jsonRequest);
+    }
+
+    private static void encodeRequestMetadata(DeviceRegistrationPayload payload, JsonObject jsonRequest) {
+        JsonObject jsonMetadata = Json.object();
+        
+        Map<String, String> metadata = payload.getMetadata();
+        
+        if (metadata != null) {
+            for (String key : metadata.keySet()) {
+        	String value = metadata.get(key);
+        	jsonMetadata.add(key, value);
+            }
+        }
+        
+        jsonRequest.add("metadata", jsonMetadata);
     }
 
 }

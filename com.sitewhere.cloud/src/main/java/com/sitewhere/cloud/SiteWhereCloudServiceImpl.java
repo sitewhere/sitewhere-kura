@@ -780,34 +780,27 @@ public class SiteWhereCloudServiceImpl
             return;
         }
 
-        StringBuilder sbTopic = new StringBuilder();
-        sbTopic.append(this.options.getTopicControlPrefix()).append(CloudServiceOptions.getTopicSeparator())
-                .append(CloudServiceOptions.getTopicAccountToken()).append(CloudServiceOptions.getTopicSeparator())
-                .append(CloudServiceOptions.getTopicClientIdToken()).append(CloudServiceOptions.getTopicSeparator())
-                .append(CloudServiceOptions.getTopicBirthSuffix());
-
-        // SiteWhere json topic
-        // "SiteWhere/default/input/json"
+        // SiteWhere input topic
         String topic = this.options.getSiteWhereTopic();
         
-        KuraPayload payload = createBirthPayload();
+        KuraPayload payload = createRegistrationPayload();
         publishLifeCycleMessage(topic, payload);
     }
 
     private void publishDisconnectCertificate() throws KuraException {
-        if (this.options.isLifecycleCertsDisabled()) {
-            return;
-        }
-
-        StringBuilder sbTopic = new StringBuilder();
-        sbTopic.append(this.options.getTopicControlPrefix()).append(CloudServiceOptions.getTopicSeparator())
-                .append(CloudServiceOptions.getTopicAccountToken()).append(CloudServiceOptions.getTopicSeparator())
-                .append(CloudServiceOptions.getTopicClientIdToken()).append(CloudServiceOptions.getTopicSeparator())
-                .append(CloudServiceOptions.getTopicDisconnectSuffix());
-
-        String topic = sbTopic.toString();
-        KuraPayload payload = createDisconnectPayload();
-        publishLifeCycleMessage(topic, payload);
+//        if (this.options.isLifecycleCertsDisabled()) {
+//            return;
+//        }
+//
+//        StringBuilder sbTopic = new StringBuilder();
+//        sbTopic.append(this.options.getTopicControlPrefix()).append(CloudServiceOptions.getTopicSeparator())
+//                .append(CloudServiceOptions.getTopicAccountToken()).append(CloudServiceOptions.getTopicSeparator())
+//                .append(CloudServiceOptions.getTopicClientIdToken()).append(CloudServiceOptions.getTopicSeparator())
+//                .append(CloudServiceOptions.getTopicDisconnectSuffix());
+//
+//        String topic = sbTopic.toString();
+//        KuraPayload payload = createDisconnectPayload();
+//        publishLifeCycleMessage(topic, payload);
     }
 
     private void publishAppCertificate() throws KuraException {
@@ -822,20 +815,20 @@ public class SiteWhereCloudServiceImpl
                 .append(CloudServiceOptions.getTopicAppsSuffix());
 
         String topic = sbTopic.toString();
-        KuraPayload payload = createBirthPayload();
+        KuraPayload payload = createRegistrationPayload();
         publishLifeCycleMessage(topic, payload);
     }
 
-    private KuraPayload createBirthPayload() {
+    private KuraPayload createRegistrationPayload() {
         LifeCyclePayloadBuilder payloadBuilder = new LifeCyclePayloadBuilder(this);
         // return payloadBuilder.buildBirthPayload();
         return payloadBuilder.buildDeviceRegistrationPayload();
     }
 
-    private KuraPayload createDisconnectPayload() {
-        LifeCyclePayloadBuilder payloadBuilder = new LifeCyclePayloadBuilder(this);
-        return payloadBuilder.buildDisconnectPayload();
-    }
+//    private KuraPayload createDisconnectPayload() {
+//        LifeCyclePayloadBuilder payloadBuilder = new LifeCyclePayloadBuilder(this);
+//        return payloadBuilder.buildDisconnectPayload();
+//    }
 
     private void publishLifeCycleMessage(String topic, KuraPayload payload) throws KuraException {
         // track the message ID and block until the message

@@ -11,7 +11,9 @@
  *******************************************************************************/
 package com.sitewhere.cloud;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.kura.core.message.KuraBirthPayload;
 import org.eclipse.kura.core.message.KuraBirthPayload.KuraBirthPayloadBuilder;
@@ -50,7 +52,10 @@ public class LifeCyclePayloadBuilder {
     }
     
     public DeviceRegistrationPayload buildDeviceRegistrationPayload() {
-	DeviceRegistrationPayloadBuilder builder = new DeviceRegistrationPayloadBuilder();
+        // build device profile
+        KuraDeviceProfile deviceProfile = buildDeviceProfile();
+        
+        DeviceRegistrationPayloadBuilder builder = new DeviceRegistrationPayloadBuilder();
 	
         // build device name
         CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
@@ -58,11 +63,36 @@ public class LifeCyclePayloadBuilder {
         if (deviceName == null) {
             deviceName = this.cloudServiceImpl.getSystemService().getDeviceName();
         }
+        
+        Map<String, String> metadata = new HashMap<>();
 
-        return builder.withDeviceToken(deviceName)
+        metadata.put("uptime", deviceProfile.getUptime());
+        metadata.put("display.name", deviceName);
+        metadata.put("model.name", deviceProfile.getModelName());
+        metadata.put("model.id", deviceProfile.getModelId());
+        metadata.put("part.number", deviceProfile.getPartNumber());
+        metadata.put("serial.number", deviceProfile.getSerialNumber());
+        metadata.put("firmware.version", deviceProfile.getFirmwareVersion());
+        metadata.put("bios.version", deviceProfile.getBiosVersion());
+        metadata.put("os.name", deviceProfile.getOs());
+        metadata.put("os.version", deviceProfile.getOsVersion());
+        metadata.put("os.architecture", deviceProfile.getOsArch());
+        metadata.put("jvm.name", deviceProfile.getJvmName());
+        metadata.put("jvm.version", deviceProfile.getJvmVersion());
+        metadata.put("jvm.profile", deviceProfile.getJvmProfile());
+        metadata.put("kura.version", deviceProfile.getKuraVersion());
+        metadata.put("connection.interfaces", deviceProfile.getConnectionInterface());
+        metadata.put("connection.ip", deviceProfile.getConnectionIp());
+        metadata.put("available.proccesors", deviceProfile.getAvailableProcessors());
+        metadata.put("memory.total", deviceProfile.getTotalMemory());
+        metadata.put("osgi.framework", deviceProfile.getOsgiFramework());
+        metadata.put("osgi.framework.version", deviceProfile.getOsgiFrameworkVersion());
+        
+	return builder.withDeviceToken(deviceName)
           .withAreaToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationAreaToken())
           .withCustomerToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationCustomerToken())
 	  .withDeviceTypeToken(this.cloudServiceImpl.getCloudServiceOptions().getDeviceTypeToken())
+	  .withMetadata(metadata )
 	  .build();
     }
 
@@ -236,6 +266,7 @@ public class LifeCyclePayloadBuilder {
         return sbAppIDs.toString();
     }
 
+    // TODO Remove
     private String buildAcceptEncoding() {
         String acceptEncoding = "";
         CloudServiceOptions options = this.cloudServiceImpl.getCloudServiceOptions();

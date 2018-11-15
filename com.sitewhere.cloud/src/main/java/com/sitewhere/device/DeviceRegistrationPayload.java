@@ -3,6 +3,8 @@
  */
 package com.sitewhere.device;
 
+import java.util.Map;
+
 import org.eclipse.kura.message.KuraPayload;
 
 /**
@@ -18,6 +20,8 @@ public class DeviceRegistrationPayload extends KuraPayload {
     private static final String CUSTOMER_TOKEN = "customerToken";
 
     private static final String AREA_TOKEN = "areaToken";
+    
+    private static final String METADATA = "metadata";
 
     public String getDeviceToken() {
 	return (String) getMetric(DEVICE_TOKEN);
@@ -33,6 +37,11 @@ public class DeviceRegistrationPayload extends KuraPayload {
 
     public String getAreaToken() {
 	return (String) getMetric(AREA_TOKEN);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getMetadata() {
+	return (Map<String, String>) getMetric(METADATA);
     }
 
     @Override
@@ -58,6 +67,8 @@ public class DeviceRegistrationPayload extends KuraPayload {
 	private String customerToken;
 
 	private String areaToken;
+	
+	private Map<String, String> metadata;
 
 	public DeviceRegistrationPayloadBuilder withDeviceTypeToken(String deviceTypeToken) {
 	    this.deviceTypeToken = deviceTypeToken;
@@ -79,6 +90,11 @@ public class DeviceRegistrationPayload extends KuraPayload {
 	    return this;
 	}
 
+	public DeviceRegistrationPayloadBuilder withMetadata(Map<String, String> metadata) {
+	    this.metadata = metadata;
+	    return this;
+	}
+	
 	public DeviceRegistrationPayload build() {
 	    DeviceRegistrationPayload deviceRegistrationPayload = new DeviceRegistrationPayload();
 
@@ -93,6 +109,9 @@ public class DeviceRegistrationPayload extends KuraPayload {
 	    }
 	    if (this.areaToken != null) {
 		deviceRegistrationPayload.addMetric(AREA_TOKEN, this.areaToken);
+	    }
+	    if (this.metadata != null) {
+		deviceRegistrationPayload.addMetric(METADATA, metadata);
 	    }
 	    return deviceRegistrationPayload;
 	}
