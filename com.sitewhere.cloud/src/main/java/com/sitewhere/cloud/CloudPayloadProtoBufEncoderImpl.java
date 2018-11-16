@@ -1,30 +1,29 @@
-/*******************************************************************************
- * Copyright (c) 2011, 2017 Eurotech and/or its affiliates and others
+/*
+ * Copyright (c) SiteWhere, LLC. All rights reserved. http://www.sitewhere.com
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Eurotech
- *     Red Hat Inc
- *******************************************************************************/
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 package com.sitewhere.cloud;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.eclipse.kura.message.KuraPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sitewhere.communication.protobuf.proto3.SiteWhere2;
+import com.sitewhere.communication.protobuf.proto3.SiteWhere2.DeviceEvent.Command;
 import com.sitewhere.device.DeviceRegistrationPayload;
-import com.sitewhere.grpc.model.DeviceEventModel;
 
 /**
- * Encodes an KuraPayload class using the Google ProtoBuf binary format.
+ * Encodes Device Registration Message using Protocol Buffer
+ * 
+ * @author Jorge Villaverde
  */
-public class CloudPayloadProtoBufEncoderImpl implements CloudPayloadEncoder {
+public class CloudPayloadProtoBufEncoderImpl implements PayloadEncoder {
 
     private static final Logger logger = LoggerFactory.getLogger(CloudPayloadProtoBufEncoderImpl.class);
 
@@ -43,15 +42,32 @@ public class CloudPayloadProtoBufEncoderImpl implements CloudPayloadEncoder {
     public byte[] getBytes() throws IOException {
 	logger.debug("Create Device Registration Protobuf payload");
 	
-	DeviceEventModel.GDeviceRegistrationRequest.Builder builder = 
-		DeviceEventModel.GDeviceRegistrationRequest.newBuilder();
+	ByteArrayOutputStream out = new ByteArrayOutputStream();
 	
-	builder.getAreaTokenBuilder().setValue(getDeviceRegistrationPayload().getAreaToken());
-	builder.getCustomerTokenBuilder().setValue(getDeviceRegistrationPayload().getCustomerToken());
-	builder.getDeviceTypeTokenBuilder().setValue(getDeviceRegistrationPayload().getDeviceTypeToken());
-	builder.putAllMetadata(getDeviceRegistrationPayload().getMetadata());
+	SiteWhere2.DeviceEvent.Header.Builder headerBuilder = SiteWhere2.DeviceEvent.Header.newBuilder();
 	
-	return builder.build().toByteArray();
+	headerBuilder.setCommand(Command.Registration);
+	headerBuilder.setDeviceToken(
+		headerBuilder.getDeviceTokenBuilder().setValue(
+			getDeviceRegistrationPayload().getDeviceToken()).build());
+	
+	SiteWhere2.DeviceEvent.Header header = headerBuilder.build();
+	header.writeDelimitedTo(out);
+	
+	SiteWhere2.DeviceEvent.DeviceRegistrationRequest.Builder payloadBuilder =
+		SiteWhere2.DeviceEvent.DeviceRegistrationRequest.newBuilder();
+	
+	payloadBuilder.getAreaTokenBuilder().setValue(getDeviceRegistrationPayload().getAreaToken());
+	payloadBuilder.getCustomerTokenBuilder().setValue(getDeviceRegistrationPayload().getCustomerToken());
+	payloadBuilder.getDeviceTypeTokenBuilder().setValue(getDeviceRegistrationPayload().getDeviceTypeToken());
+	payloadBuilder.putAllMetadata(getDeviceRegistrationPayload().getMetadata());
+	
+	SiteWhere2.DeviceEvent.DeviceRegistrationRequest payload = payloadBuilder.build();
+
+	payload.writeDelimitedTo(out);
+	
+	out.close();
+	return out.toByteArray();
     }
     
     private DeviceRegistrationPayload getDeviceRegistrationPayload() {

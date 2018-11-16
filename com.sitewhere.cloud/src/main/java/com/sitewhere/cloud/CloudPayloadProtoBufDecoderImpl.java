@@ -1,14 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2011, 2016 Eurotech and/or its affiliates
+/*
+ * Copyright (c) SiteWhere, LLC. All rights reserved. http://www.sitewhere.com
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Eurotech
- *******************************************************************************/
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 package com.sitewhere.cloud;
 
 import java.io.IOException;
@@ -26,6 +22,11 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+/**
+ * SiteWhere Cloud Service Implementation for Eclipse Kura.
+ * 
+ * @author Jorge Villaverde
+ */
 public class CloudPayloadProtoBufDecoderImpl {
 
     private static final Logger s_logger = LoggerFactory.getLogger(CloudPayloadProtoBufDecoderImpl.class);

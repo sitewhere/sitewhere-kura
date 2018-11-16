@@ -701,7 +701,7 @@ public class SiteWhereCloudServiceImpl
 
     @Override
     public byte[] getBytes(KuraPayload kuraPayload, boolean gzipped) throws KuraException {
-        CloudPayloadEncoder encoder = new CloudPayloadProtoBufEncoderImpl(kuraPayload);
+        PayloadEncoder encoder = new CloudPayloadProtoBufEncoderImpl(kuraPayload);
         if (gzipped) {
             encoder = new CloudPayloadGZipEncoder(encoder);
         }
@@ -788,19 +788,6 @@ public class SiteWhereCloudServiceImpl
     }
 
     private void publishDisconnectCertificate() throws KuraException {
-//        if (this.options.isLifecycleCertsDisabled()) {
-//            return;
-//        }
-//
-//        StringBuilder sbTopic = new StringBuilder();
-//        sbTopic.append(this.options.getTopicControlPrefix()).append(CloudServiceOptions.getTopicSeparator())
-//                .append(CloudServiceOptions.getTopicAccountToken()).append(CloudServiceOptions.getTopicSeparator())
-//                .append(CloudServiceOptions.getTopicClientIdToken()).append(CloudServiceOptions.getTopicSeparator())
-//                .append(CloudServiceOptions.getTopicDisconnectSuffix());
-//
-//        String topic = sbTopic.toString();
-//        KuraPayload payload = createDisconnectPayload();
-//        publishLifeCycleMessage(topic, payload);
     }
 
     private void publishAppCertificate() throws KuraException {
@@ -821,14 +808,8 @@ public class SiteWhereCloudServiceImpl
 
     private KuraPayload createRegistrationPayload() {
         LifeCyclePayloadBuilder payloadBuilder = new LifeCyclePayloadBuilder(this);
-        // return payloadBuilder.buildBirthPayload();
         return payloadBuilder.buildDeviceRegistrationPayload();
     }
-
-//    private KuraPayload createDisconnectPayload() {
-//        LifeCyclePayloadBuilder payloadBuilder = new LifeCyclePayloadBuilder(this);
-//        return payloadBuilder.buildDisconnectPayload();
-//    }
 
     private void publishLifeCycleMessage(String topic, KuraPayload payload) throws KuraException {
         // track the message ID and block until the message
@@ -855,7 +836,7 @@ public class SiteWhereCloudServiceImpl
             return bytes;
         }
 
-        CloudPayloadEncoder encoder = new CloudPayloadProtoBufEncoderImpl(payload);
+        PayloadEncoder encoder = new CloudPayloadProtoBufEncoderImpl(payload);
         if (this.options.getEncodeGzip()) {
             encoder = new CloudPayloadGZipEncoder(encoder);
         }

@@ -15,11 +15,11 @@ import java.io.IOException;
 
 import org.eclipse.kura.core.util.GZipUtil;
 
-public class CloudPayloadGZipEncoder implements CloudPayloadEncoder {
+public class CloudPayloadGZipEncoder implements PayloadEncoder {
 
-    private final CloudPayloadEncoder decorated;
+    private final PayloadEncoder decorated;
 
-    public CloudPayloadGZipEncoder(CloudPayloadEncoder decorated) {
+    public CloudPayloadGZipEncoder(PayloadEncoder decorated) {
         this.decorated = decorated;
     }
 
