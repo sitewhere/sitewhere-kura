@@ -835,12 +835,7 @@ public class SiteWhereCloudServiceImpl
         if (payload == null) {
             return bytes;
         }
-
         PayloadEncoder encoder = new CloudPayloadProtoBufEncoderImpl(payload);
-        if (this.options.getEncodeGzip()) {
-            encoder = new CloudPayloadGZipEncoder(encoder);
-        }
-
         try {
             bytes = encoder.getBytes();
         } catch (IOException e) {

@@ -38,7 +38,6 @@ public class CloudServiceOptions {
 
     private static final String DEVICE_DISPLAY_NAME = "device.display-name";
     private static final String DEVICE_CUSTOM_NAME = "device.custom-name";
-    private static final String ENCODE_GZIP = "encode.gzip";
     private static final String REPUB_BIRTH_ON_GPS_LOCK = "republish.mqtt.birth.cert.on.gps.lock";
     private static final String REPUB_BIRTH_ON_MODEM_DETECT = "republish.mqtt.birth.cert.on.modem.detect";
     private static final String ENABLE_DFLT_SUBSCRIPTIONS = "enable.default.subscriptions";
@@ -127,20 +126,6 @@ public class CloudServiceOptions {
         }
 
         return displayName;
-    }
-
-    /**
-     * Returns true if the current CloudService configuration
-     * specifies Gzip compression enabled for outgoing payloads.
-     *
-     * @return a boolean value.
-     */
-    public boolean getEncodeGzip() {
-        boolean encodeGzip = false;
-        if (this.properties != null && this.properties.get(ENCODE_GZIP) instanceof Boolean) {
-            encodeGzip = (Boolean) this.properties.get(ENCODE_GZIP);
-        }
-        return encodeGzip;
     }
 
     /**

@@ -103,9 +103,6 @@ public class LifeCyclePayloadBuilder {
         // build application IDs
         String appIds = buildApplicationIDs();
 
-        // build accept encoding
-        String acceptEncoding = buildAcceptEncoding();
-
         // build device name
         CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
         String deviceName = cso.getDeviceDisplayName();
@@ -125,7 +122,7 @@ public class LifeCyclePayloadBuilder {
                 .withJvmName(deviceProfile.getJvmName()).withJvmVersion(deviceProfile.getJvmVersion())
                 .withJvmProfile(deviceProfile.getJvmProfile()).withKuraVersion(deviceProfile.getKuraVersion())
                 .withConnectionInterface(deviceProfile.getConnectionInterface())
-                .withConnectionIp(deviceProfile.getConnectionIp()).withAcceptEncoding(acceptEncoding)
+                .withConnectionIp(deviceProfile.getConnectionIp())
                 .withApplicationIdentifiers(appIds).withAvailableProcessors(deviceProfile.getAvailableProcessors())
                 .withTotalMemory(deviceProfile.getTotalMemory()).withOsArch(deviceProfile.getOsArch())
                 .withOsgiFramework(deviceProfile.getOsgiFramework())
@@ -265,14 +262,4 @@ public class LifeCyclePayloadBuilder {
         }
         return sbAppIDs.toString();
     }
-
-    // TODO Remove
-    private String buildAcceptEncoding() {
-        String acceptEncoding = "";
-        CloudServiceOptions options = this.cloudServiceImpl.getCloudServiceOptions();
-        if (options.getEncodeGzip()) {
-            acceptEncoding = "gzip";
-        }
-        return acceptEncoding;
-    }
-}
+ }
