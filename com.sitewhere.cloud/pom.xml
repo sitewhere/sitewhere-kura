@@ -87,6 +87,14 @@
             <url>https://repo.eclipse.org/content/repositories/kura-releases/</url>
         </repository>
     </repositories>
+    <!-- Dependencies -->
+    <dependencies>
+		<dependency>
+		    <groupId>com.google.protobuf</groupId>
+		    <artifactId>protobuf-java</artifactId>
+		    <version>3.3.0</version>
+		</dependency>
+    </dependencies>
 	<!-- Build -->
 	<build>
 		<plugins>
