@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SiteWhere Cloud Connector
 Bundle-SymbolicName: com.sitewhere.cloud
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.0.0.Final
 Bundle-Vendor: SITEWHERE
 Automatic-Module-Name: com.sitewhere.cloud
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

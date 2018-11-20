@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.sitewhere</groupId>
+	<artifactId>com.sitewhere.cloud</artifactId>
+	<version>2.0.0.Final</version>
+	<packaging>eclipse-plugin</packaging>
+	<name>SiteWhere Kura Cloud Connector</name>
+	<url>https://github.com/sitewhere/sitewhere-kura</url>
+	<description>SiteWhere 2.0 Kura Cloud Connector</description>
+	<inceptionYear>2018</inceptionYear>
+	<!-- Properties -->
+	<properties>
+		<tycho-version>0.26.0</tycho-version>
+		<kura.build.version>201811192350</kura.build.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<bnd.baseline.continueOnError>false</bnd.baseline.continueOnError>
+		<osgi-dp-plugin-version>0.3.0</osgi-dp-plugin-version>
+		<tycho.scmUrl>scm:git:https://github.com/sitewhere/sitewhere-kura.git</tycho.scmUrl>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<bnd.baseline.version>3.4.0</bnd.baseline.version>
+		<org.eclipse.kura.web.skip>false</org.eclipse.kura.web.skip>
+		<kura.basedir>/Users/jorge/ws-siteware-agent</kura.basedir>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<kura.skip.can>true</kura.skip.can>
+	</properties>
+	<!-- SiteWhere Organization -->
+	<organization>
+		<name>SiteWhere</name>
+		<url>https://www.sitewhere.com</url>
+	</organization>
+	<!-- SCM -->
+	<scm>
+		<connection>scm:git:https://github.com/sitewhere/sitewhere-kura.git</connection>
+		<developerConnection>scm:git:https://github.com/sitewhere/sitewhere-kura.git</developerConnection>
+		<url>https://github.com/sitewhere/sitewhere-kura/tree/${project.scm.tag}</url>
+		<tag>master</tag>
+	</scm>
+	<!-- Issues -->
+	<issueManagement>
+		<url>https://github.com/sitewhere/sitewhere-kura/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<!-- License -->
+	<licenses>
+		<license>
+			<name>CPAL v1.0</name>
+			<url>https://opensource.org/licenses/CPAL-1.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<!-- Repositories -->
+    <repositories>
+        <repository>
+            <id>license-feature</id>
+            <url>http://download.eclipse.org/cbi/updates/license/</url>
+            <layout>p2</layout>
+        </repository>
+        <repository>
+            <id>p2-repo-common</id>
+            <layout>p2</layout>
+            <url>file:///${kura.basedir}/target-definition/common/repository/</url>
+        </repository>
+        <repository>
+            <id>p2-repo-test-deps</id>
+            <layout>p2</layout>
+            <url>file:///${kura.basedir}/target-definition/test-deps/repository/</url>
+        </repository>
+        <repository>
+            <id>kura_addons</id>
+            <name>Eclipse Kura Addons Maven Repository</name>
+            <url>https://raw.github.com/eurotech/kura_addons/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <!--
+            See Github issue #1755
+            https://github.com/bndtools/bnd/issues/1755
+        -->
+        <repository>
+            <id>repo.eclipse.org</id>
+            <name>Eclipse Kura Repository - Releases</name>
+            <url>https://repo.eclipse.org/content/repositories/kura-releases/</url>
+        </repository>
+    </repositories>
+	<!-- Build -->
+	<build>
+		<plugins>
+			<!-- Compiler Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<!-- Eclipse Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<!-- Tycho Plugin -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<configuration>
+					<sourceReferences>
+						<generate>true</generate>
+					</sourceReferences>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.tycho.extras</groupId>
+						<artifactId>tycho-sourceref-jgit</artifactId>
+						<version>${tycho-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<!-- make us aware of warnings -->
+					<showWarnings>true</showWarnings>
+					<!-- Kura does not set bootdelegation, we let the compiler check for 
+						this -->
+					<requireJREPackageImports>true</requireJREPackageImports>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-packaging-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<strictVersions>true</strictVersions>
+						<format>${kura.build.version}</format>
+					</configuration>
+				</plugin>
+                <plugin>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-baseline-maven-plugin</artifactId>
+                    <version>${bnd.baseline.version}</version>
+                    <configuration>
+                        <continueOnError>${bnd.baseline.continueOnError}</continueOnError>
+                        <fullReport>true</fullReport>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>baseline</id>
+                            <goals>
+                                <goal>baseline</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<!-- Profiles -->
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <property>
+                    <name>!kura.osgi</name>
+                </property>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>p2-repo-equinox_3.12.50</id>
+                    <layout>p2</layout>
+                    <url>file:///${kura.basedir}/target-definition/equinox_3.12.50/repository/</url>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>equinox</id>
+            <activation>
+                <property>
+                    <name>kura.osgi</name>
+                    <value>equinox</value>
+                </property>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>p2-repo-equinox_3.12.50</id>
+                    <layout>p2</layout>
+                    <url>file:///${kura.basedir}/target-definition/equinox_3.12.50/repository/</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+</project>
