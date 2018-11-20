@@ -14,7 +14,7 @@ cleanup() {
 
 if [ -ne $KURA_WORKSPACE_FILE_NAME ]; then
   echo "File $KURA_WORKSPACE_FILE_NAME does not exist."
-  exit 1;
+  exit 1
 else
   echo "File $KURA_WORKSPACE_FILE_NAME exists."
 
@@ -26,6 +26,6 @@ else
   pushd $SITEWHERE_KCC
   mvn clean install -Dkura.basedir=$KURA_WORKSPACE_DIR
   popd
-  cleanup();
-  exit 0;
+  cleanup()
+  exit 0
 fi
