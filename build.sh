@@ -7,11 +7,6 @@ SITEWHERE_KCC='com.sitewhere.cloud'
 
 wget -O$KURA_WORKSPACE_FILE_NAME $KURA_WORKSPACE 
 
-cleanup() {
-  rm -rf $KURA_WORKSPACE_DIR
-  rm $KURA_WORKSPACE_FILE_NAME
-}
-
 if [ -ne $KURA_WORKSPACE_FILE_NAME ]; then
   echo "File $KURA_WORKSPACE_FILE_NAME does not exist."
   exit 1
@@ -23,9 +18,8 @@ else
 
   echo "Building SiteWhere Kura Cloud Connector ..."
   
-  pushd $SITEWHERE_KCC
+  cd $SITEWHERE_KCC
   mvn clean install -Dkura.basedir=$KURA_WORKSPACE_DIR
-  popd
-  cleanup()
+  cd ..
   exit 0
 fi
