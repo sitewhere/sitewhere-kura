@@ -14,8 +14,8 @@ import org.eclipse.kura.message.KuraPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sitewhere.communication.protobuf.proto3.SiteWhere2;
-import com.sitewhere.communication.protobuf.proto3.SiteWhere2.DeviceEvent.Command;
+import com.sitewhere.communication.protobuf.proto.SiteWhere;
+import com.sitewhere.communication.protobuf.proto.SiteWhere.DeviceEvent.Command;
 import com.sitewhere.device.DeviceRegistrationPayload;
 
 /**
@@ -44,25 +44,25 @@ public class CloudPayloadProtoBufEncoderImpl implements PayloadEncoder {
 	
 	ByteArrayOutputStream out = new ByteArrayOutputStream();
 	
-	SiteWhere2.DeviceEvent.Header.Builder headerBuilder = SiteWhere2.DeviceEvent.Header.newBuilder();
+	SiteWhere.DeviceEvent.Header.Builder headerBuilder = SiteWhere.DeviceEvent.Header.newBuilder();
 	
-	headerBuilder.setCommand(Command.Registration);
+	headerBuilder.setCommand(Command.SEND_REGISTRATION);
 	headerBuilder.setDeviceToken(
 		headerBuilder.getDeviceTokenBuilder().setValue(
 			getDeviceRegistrationPayload().getDeviceToken()).build());
 	
-	SiteWhere2.DeviceEvent.Header header = headerBuilder.build();
+	SiteWhere.DeviceEvent.Header header = headerBuilder.build();
 	header.writeDelimitedTo(out);
 	
-	SiteWhere2.DeviceEvent.DeviceRegistrationRequest.Builder payloadBuilder =
-		SiteWhere2.DeviceEvent.DeviceRegistrationRequest.newBuilder();
+	SiteWhere.DeviceEvent.DeviceRegistrationRequest.Builder payloadBuilder =
+		SiteWhere.DeviceEvent.DeviceRegistrationRequest.newBuilder();
 	
 	payloadBuilder.getAreaTokenBuilder().setValue(getDeviceRegistrationPayload().getAreaToken());
 	payloadBuilder.getCustomerTokenBuilder().setValue(getDeviceRegistrationPayload().getCustomerToken());
 	payloadBuilder.getDeviceTypeTokenBuilder().setValue(getDeviceRegistrationPayload().getDeviceTypeToken());
 	payloadBuilder.putAllMetadata(getDeviceRegistrationPayload().getMetadata());
 	
-	SiteWhere2.DeviceEvent.DeviceRegistrationRequest payload = payloadBuilder.build();
+	SiteWhere.DeviceEvent.DeviceRegistrationRequest payload = payloadBuilder.build();
 
 	payload.writeDelimitedTo(out);
 	
