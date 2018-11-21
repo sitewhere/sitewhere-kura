@@ -14,7 +14,6 @@ import static org.eclipse.kura.configuration.ConfigurationService.KURA_SERVICE_P
 import static org.eclipse.kura.core.message.MessageConstants.APP_ID;
 import static org.eclipse.kura.core.message.MessageConstants.APP_TOPIC;
 import static org.eclipse.kura.core.message.MessageConstants.CONTROL;
-import static org.eclipse.kura.core.message.MessageConstants.FULL_TOPIC;
 import static org.eclipse.kura.core.message.MessageConstants.PRIORITY;
 import static org.eclipse.kura.core.message.MessageConstants.QOS;
 import static org.eclipse.kura.core.message.MessageConstants.RETAIN;
@@ -28,8 +27,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -957,21 +956,10 @@ public class SiteWhereCloudServiceImpl
         boolean retain = (Boolean) messageProps.get(RETAIN.name());
         int priority = (Integer) messageProps.get(PRIORITY.name());
 
-        String fullTopic = (String) messageProps.get(FULL_TOPIC.name());
-
-        if (isNull(fullTopic)) {
-            String appId = (String) messageProps.get(APP_ID.name());
-            String appTopic = (String) messageProps.get(APP_TOPIC.name());
-            boolean isControl = (Boolean) messageProps.get(CONTROL.name());
-
-            String deviceId = CloudServiceOptions.getTopicClientIdToken();
-
-            fullTopic = encodeTopic(appId, deviceId, appTopic, isControl);
-        }
-
+        String topic = (String) messageProps.get(APP_TOPIC.name());
         byte[] appPayload = encodePayload(message.getPayload());
 
-        int id = this.dataService.publish(fullTopic, appPayload, qos, retain, priority);
+        int id = this.dataService.publish(topic, appPayload, qos, retain, priority);
 
         if (qos == 0) {
             return null;

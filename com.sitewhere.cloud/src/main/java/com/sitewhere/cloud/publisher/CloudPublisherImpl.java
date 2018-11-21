@@ -35,6 +35,7 @@ import org.eclipse.kura.cloudconnection.message.KuraMessage;
 import org.eclipse.kura.cloudconnection.publisher.CloudPublisher;
 import org.eclipse.kura.configuration.ConfigurableComponent;
 import org.eclipse.kura.core.message.MessageType;
+import org.eclipse.kura.message.KuraPayload;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Filter;
@@ -47,7 +48,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sitewhere.cloud.CloudPublisherDeliveryListener;
+import com.sitewhere.cloud.CloudServiceOptions;
 import com.sitewhere.cloud.SiteWhereCloudServiceImpl;
+import com.sitewhere.device.SendMeasurementePayload;
 
 public class CloudPublisherImpl
         implements CloudPublisher, ConfigurableComponent, CloudConnectionListener, CloudPublisherDeliveryListener {
@@ -152,7 +155,12 @@ public class CloudPublisherImpl
             throw new IllegalArgumentException();
         }
 
-        String appTopic = fillAppTopicPlaceholders(this.cloudPublisherOptions.getAppTopic(), message);
+        CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
+        String deviceName = cso.getDeviceDisplayName();
+        if (deviceName == null) {
+            deviceName = this.cloudServiceImpl.getSystemService().getDeviceName();
+        }
+        String appTopic = cso.getSiteWhereTopic();
 
         int qos = this.cloudPublisherOptions.getQos();
         boolean retain = this.cloudPublisherOptions.isRetain();
@@ -167,28 +175,22 @@ public class CloudPublisherImpl
         publishMessageProps.put(PRIORITY.name(), priority);
         publishMessageProps.put(CONTROL.name(), isControl);
 
-        KuraMessage publishMessage = new KuraMessage(message.getPayload(), publishMessageProps);
+        KuraPayload payload = message.getPayload();
+        
+        Set<String> keys = payload.metricNames();
+        
+        for(String key : keys) {
+            Object value = payload.getMetric(key);
+            SendMeasurementePayload.Builder builder = SendMeasurementePayload.newBuilder();
+            builder.withDeviceToken(deviceName);
+            builder.withName(key);
+            builder.withValue(value);
+            builder.withUpdateState(true);
+            KuraMessage publishMessage = new KuraMessage(builder.build(), publishMessageProps);
+            this.cloudServiceImpl.publish(publishMessage);
 
-        return this.cloudServiceImpl.publish(publishMessage);
-    }
-
-    private String fillAppTopicPlaceholders(String appTopic, KuraMessage message) {
-        Matcher matcher = TOPIC_PATTERN.matcher(appTopic);
-        StringBuffer buffer = new StringBuffer();
-
-        while (matcher.find()) {
-            Map<String, Object> properties = message.getProperties();
-            if (properties.containsKey(matcher.group(1))) {
-                String replacement = matcher.group(0);
-
-                Object value = properties.get(matcher.group(1));
-                if (replacement != null) {
-                    matcher.appendReplacement(buffer, value.toString());
-                }
-            }
         }
-        matcher.appendTail(buffer);
-        return buffer.toString();
+        return null;
     }
 
     private void initCloudConnectionManagerTracking() {
