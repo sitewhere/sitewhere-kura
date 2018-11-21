@@ -1,19 +1,20 @@
-/**
- * 
+/*
+ * Copyright (c) SiteWhere, LLC. All rights reserved. http://www.sitewhere.com
+ *
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
  */
-package com.sitewhere.device;
+package com.sitewhere.cloud.payload;
 
 import java.util.Map;
 
-import org.eclipse.kura.message.KuraPayload;
-
 /**
- * @author jorge
- *
+ * SiteWhere Device Registration Message for Eclipse Kura.
+ * 
+ * @author Jorge Villaverde
  */
-public class DeviceRegistrationPayload extends KuraPayload {
-
-    private static final String DEVICE_TOKEN = "deviceToken";
+public class DeviceRegistrationPayload extends SiteWherePayload {
 
     private static final String DEVICE_TYPE_TOKEN = "deviceTypeToken";
 
@@ -23,10 +24,6 @@ public class DeviceRegistrationPayload extends KuraPayload {
     
     private static final String METADATA = "metadata";
 
-    public String getDeviceToken() {
-	return (String) getMetric(DEVICE_TOKEN);
-    }
-    
     public String getDeviceTypeToken() {
 	return (String) getMetric(DEVICE_TYPE_TOKEN);
     }
@@ -58,9 +55,15 @@ public class DeviceRegistrationPayload extends KuraPayload {
 	return sb.toString();
     }
 
-    public static class DeviceRegistrationPayloadBuilder {
+    public static Builder newBuilder() {
+	return new Builder();
+    }
+
+    public static class Builder {
 
 	private String deviceToken;
+		
+	private String originator;
 	
 	private String deviceTypeToken;
 
@@ -70,51 +73,62 @@ public class DeviceRegistrationPayload extends KuraPayload {
 	
 	private Map<String, String> metadata;
 
-	public DeviceRegistrationPayloadBuilder withDeviceTypeToken(String deviceTypeToken) {
+	private Builder() {
+	    super();
+	}
+
+	public DeviceRegistrationPayload.Builder withDeviceToken(String deviceToken) {
+	    this.deviceToken = deviceToken;
+	    return this;
+	}
+	
+	public DeviceRegistrationPayload.Builder withOriginator(String originator) {
+	    this.originator = originator;
+	    return this;
+	}
+
+	public DeviceRegistrationPayload.Builder withDeviceTypeToken(String deviceTypeToken) {
 	    this.deviceTypeToken = deviceTypeToken;
 	    return this;
 	}
 
-	public DeviceRegistrationPayloadBuilder withDeviceToken(String deviceToken) {
-	    this.deviceToken = deviceToken;
-	    return this;
-	}
-
-	public DeviceRegistrationPayloadBuilder withCustomerToken(String customerToken) {
+	public DeviceRegistrationPayload.Builder withCustomerToken(String customerToken) {
 	    this.customerToken = customerToken;
 	    return this;
 	}
 
-	public DeviceRegistrationPayloadBuilder withAreaToken(String areaToken) {
+	public DeviceRegistrationPayload.Builder withAreaToken(String areaToken) {
 	    this.areaToken = areaToken;
 	    return this;
 	}
 
-	public DeviceRegistrationPayloadBuilder withMetadata(Map<String, String> metadata) {
+	public DeviceRegistrationPayload.Builder withMetadata(Map<String, String> metadata) {
 	    this.metadata = metadata;
 	    return this;
 	}
 	
 	public DeviceRegistrationPayload build() {
-	    DeviceRegistrationPayload deviceRegistrationPayload = new DeviceRegistrationPayload();
+	    DeviceRegistrationPayload payload = new DeviceRegistrationPayload();
 
 	    if (this.deviceToken != null) {
-		deviceRegistrationPayload.addMetric(DEVICE_TOKEN, this.deviceToken);
+		payload.addMetric(DEVICE_TOKEN, this.deviceToken);
+	    }
+	    if (this.originator != null) {
+		payload.addMetric(ORIGINATOR, this.originator);
 	    }
 	    if (this.deviceTypeToken != null) {
-		deviceRegistrationPayload.addMetric(DEVICE_TYPE_TOKEN, this.deviceTypeToken);
+		payload.addMetric(DEVICE_TYPE_TOKEN, this.deviceTypeToken);
 	    }
 	    if (this.customerToken != null) {
-		deviceRegistrationPayload.addMetric(CUSTOMER_TOKEN, this.customerToken);
+		payload.addMetric(CUSTOMER_TOKEN, this.customerToken);
 	    }
 	    if (this.areaToken != null) {
-		deviceRegistrationPayload.addMetric(AREA_TOKEN, this.areaToken);
+		payload.addMetric(AREA_TOKEN, this.areaToken);
 	    }
 	    if (this.metadata != null) {
-		deviceRegistrationPayload.addMetric(METADATA, metadata);
+		payload.addMetric(METADATA, metadata);
 	    }
-	    return deviceRegistrationPayload;
+	    return payload;
 	}
     }
-
 }

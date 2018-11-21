@@ -15,6 +15,8 @@ import java.io.IOException;
 
 import org.eclipse.kura.core.util.GZipUtil;
 
+import com.sitewhere.cloud.encode.PayloadEncoder;
+
 public class CloudPayloadGZipEncoder implements PayloadEncoder {
 
     private final PayloadEncoder decorated;

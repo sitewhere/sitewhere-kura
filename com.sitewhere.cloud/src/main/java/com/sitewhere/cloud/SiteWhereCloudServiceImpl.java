@@ -81,6 +81,13 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sitewhere.cloud.encode.PayloadEncoder;
+import com.sitewhere.cloud.encode.json.DeviceRegistrationJsonEncoder;
+import com.sitewhere.cloud.encode.json.SendMeasurementJsonEncoder;
+import com.sitewhere.cloud.encode.protobuf.DeviceRegistrationProtoBufEncoder;
+import com.sitewhere.cloud.encode.protobuf.SendMeasurementProtoBufEncoder;
+import com.sitewhere.cloud.payload.DeviceRegistrationPayload;
+import com.sitewhere.cloud.payload.SendMeasurementPayload;
 import com.sitewhere.cloud.publisher.NotificationPublisherImpl;
 import com.sitewhere.cloud.subscriber.CloudSubscriptionRecord;
 
@@ -699,8 +706,8 @@ public class SiteWhereCloudServiceImpl
     // ----------------------------------------------------------------
 
     @Override
-    public byte[] getBytes(KuraPayload kuraPayload, boolean gzipped) throws KuraException {
-        PayloadEncoder encoder = new CloudPayloadProtoBufEncoderImpl(kuraPayload);
+    public byte[] getBytes(KuraPayload payload, boolean gzipped) throws KuraException {
+        PayloadEncoder encoder = createProtoBufEncoder(payload);
         if (gzipped) {
             encoder = new CloudPayloadGZipEncoder(encoder);
         }
@@ -829,12 +836,36 @@ public class SiteWhereCloudServiceImpl
         }
     }
 
+    private PayloadEncoder createProtoBufEncoder(KuraPayload payload) throws KuraException {
+        PayloadEncoder encoder = null;
+	if (payload instanceof DeviceRegistrationPayload) {
+	    encoder = new DeviceRegistrationProtoBufEncoder((DeviceRegistrationPayload)payload);
+	} else if (payload instanceof SendMeasurementPayload) {
+	    encoder = new SendMeasurementProtoBufEncoder((SendMeasurementPayload)payload);	    
+	}
+	if (encoder == null)
+	    throw new KuraException(KuraErrorCode.ENCODE_ERROR, payload);
+	return encoder;
+    }
+    
+    private PayloadEncoder createJsonEncoder(KuraPayload payload) throws KuraException {
+        PayloadEncoder encoder = null;
+	if (payload instanceof DeviceRegistrationPayload) {
+	    encoder = new DeviceRegistrationJsonEncoder((DeviceRegistrationPayload)payload);
+	} else if (payload instanceof SendMeasurementPayload) {
+	    encoder = new SendMeasurementJsonEncoder((SendMeasurementPayload)payload);	    
+	}
+	if (encoder == null)
+	    throw new KuraException(KuraErrorCode.ENCODE_ERROR, payload);
+	return encoder;
+    }
+    
     private byte[] encodeProtobufPayload(KuraPayload payload) throws KuraException {
         byte[] bytes = new byte[0];
         if (payload == null) {
             return bytes;
         }
-        PayloadEncoder encoder = new CloudPayloadProtoBufEncoderImpl(payload);
+        PayloadEncoder encoder = createProtoBufEncoder(payload);        
         try {
             bytes = encoder.getBytes();
         } catch (IOException e) {
@@ -843,9 +874,17 @@ public class SiteWhereCloudServiceImpl
         return bytes;
     }
 
-    private byte[] encodeJsonPayload(KuraPayload payload) {
-//        return CloudPayloadJsonEncoder.getBytes(payload);
-        return SiteWhereCloudPlayloadJsonEncoder.getBytes(payload);
+    private byte[] encodeJsonPayload(KuraPayload payload) throws KuraException {
+        byte[] bytes = new byte[0];
+        if (payload == null) {
+            return bytes;
+        }
+        PayloadEncoder encoder = createJsonEncoder(payload);
+        try {
+	    return encoder.getBytes();
+	} catch (IOException e) {
+            throw new KuraException(KuraErrorCode.ENCODE_ERROR, e);
+        }
     }
 
     private KuraPayload createKuraPayloadFromJson(byte[] payload) {

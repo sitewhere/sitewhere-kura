@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sitewhere.cloud.CloudPayloadProtoBufDecoderImpl;
-import com.sitewhere.cloud.CloudPayloadProtoBufEncoderImpl;
 import com.sitewhere.cloud.KuraTopicImpl;
+import com.sitewhere.cloud.encode.protobuf.DeviceRegistrationProtoBufEncoder;
 
 @SuppressWarnings("deprecation")
 public class CloudCallServiceImpl implements CloudCallService, DataServiceListener {
@@ -117,13 +117,13 @@ public class CloudCallServiceImpl implements CloudCallService, DataServiceListen
         req.setRequestId(requestId);
         req.setRequesterClientId(CLIENT_ID_VAR_NAME);
 
-        CloudPayloadProtoBufEncoderImpl encoder = new CloudPayloadProtoBufEncoderImpl(req);
-        byte[] rawPayload;
-        try {
-            rawPayload = encoder.getBytes();
-        } catch (IOException e) {
-            throw new KuraException(KuraErrorCode.INTERNAL_ERROR, e, "Cannot encode request");
-        }
+//        DeviceRegistrationProtoBufEncoder encoder = new DeviceRegistrationProtoBufEncoder(req);
+        byte[] rawPayload = null;
+//        try {
+//            rawPayload = encoder.getBytes();
+//        } catch (IOException e) {
+//            throw new KuraException(KuraErrorCode.INTERNAL_ERROR, e, "Cannot encode request");
+//        }
 
         this.m_respTopic = sbRespTopic.toString();
         this.m_resp = null;

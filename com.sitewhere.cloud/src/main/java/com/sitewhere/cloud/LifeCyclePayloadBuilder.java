@@ -31,8 +31,7 @@ import org.eclipse.kura.system.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sitewhere.device.DeviceRegistrationPayload;
-import com.sitewhere.device.DeviceRegistrationPayload.DeviceRegistrationPayloadBuilder;
+import com.sitewhere.cloud.payload.DeviceRegistrationPayload;
 
 /**
  * Utility class to build lifecycle payload messages.
@@ -55,7 +54,7 @@ public class LifeCyclePayloadBuilder {
         // build device profile
         KuraDeviceProfile deviceProfile = buildDeviceProfile();
         
-        DeviceRegistrationPayloadBuilder builder = new DeviceRegistrationPayloadBuilder();
+        DeviceRegistrationPayload.Builder builder = DeviceRegistrationPayload.newBuilder();
 	
         // build device name
         CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
@@ -89,6 +88,7 @@ public class LifeCyclePayloadBuilder {
         metadata.put("osgi-framework-version", deviceProfile.getOsgiFrameworkVersion());
         
 	return builder.withDeviceToken(deviceName)
+	  .withOriginator("device")
           .withAreaToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationAreaToken())
           .withCustomerToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationCustomerToken())
 	  .withDeviceTypeToken(this.cloudServiceImpl.getCloudServiceOptions().getDeviceTypeToken())
