@@ -11,11 +11,6 @@
  *******************************************************************************/
 package org.eclipse.kura.core.message;
 
-import org.eclipse.kura.cloudconnection.CloudConnectionManager;
-import org.eclipse.kura.cloudconnection.message.KuraMessage;
-import org.eclipse.kura.cloudconnection.publisher.CloudPublisher;
-import org.eclipse.kura.cloudconnection.subscriber.CloudSubscriber;
-
 /**
  * Internal enum providing constants for property sharing between {@link CloudPublisher}s or {@link CloudSubscriber}s
  * and {@link CloudConnectionManager} implementations.

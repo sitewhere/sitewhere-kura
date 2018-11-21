@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" enabled="true" immediate="true" modified="updated" name="org.eclipse.kura.cloud.publisher.CloudPublisher">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0"
+	activate="activate" 
+	configuration-policy="require" 
+	deactivate="deactivate" 
+	enabled="true" 
+	immediate="false" 
+	modified="updated" 
+	name="com.sitewhere.cloud.publisher.CloudPublisher">
    <implementation class="com.sitewhere.cloud.publisher.CloudPublisherImpl"/>
    <service>
       <provide interface="org.eclipse.kura.cloudconnection.publisher.CloudPublisher"/>
       <provide interface="org.eclipse.kura.configuration.ConfigurableComponent"/>
    </service>
-   <property name="service.pid" type="String" value="org.eclipse.kura.cloud.publisher.CloudPublisher"/>
+   <property name="service.pid" type="String" value="com.sitewhere.cloud.publisher.CloudPublisher"/>
    <property name="cloud.connection.factory.pid" type="String" value="com.sitewhere.cloud.SiteWhereCloudService"/>
    <property name="kura.ui.service.hide" type="Boolean" value="true"/>
    <property name="kura.ui.factory.hide" type="String" value="true"/>

@@ -1,15 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2011, 2018 Eurotech and/or its affiliates and others
+/*
+ * Copyright (c) SiteWhere, LLC. All rights reserved. http://www.sitewhere.com
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Eurotech
- *     Red Hat Inc
- *******************************************************************************/
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 package com.sitewhere.cloud.factory;
 
 import java.util.ArrayList;
@@ -22,141 +17,19 @@ import java.util.stream.Collectors;
 
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
-import org.eclipse.kura.cloud.CloudService;
 import org.eclipse.kura.cloud.factory.CloudServiceFactory;
 import org.eclipse.kura.cloudconnection.CloudConnectionManager;
 import org.eclipse.kura.cloudconnection.factory.CloudConnectionFactory;
 import org.eclipse.kura.configuration.ConfigurationService;
-import org.eclipse.kura.data.DataTransportService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.component.ComponentConstants;
 import org.osgi.service.component.ComponentContext;
 
 /**
- * The Kura default {@link CloudServiceFactory} implements a three layer stack architecture.
- * Each layer is an OSGi Declarative Services Factory Component and provides a service as follows:
- *
- * <table>
- * <thead>
- * <tr>
- * <th>Factory PID</th>
- * <th>Service interface</th>
- * </tr>
- * </thead>
- * <tbody>
- * <tr>
- * <td>org.eclipse.kura.cloud.CloudService</td>
- * <td>{@link CloudService}</td>
- * </tr>
- * <tr>
- * <td>org.eclipse.kura.data.DataService</td>
- * <td>{@link CloudService}</td>
- * </tr>
- * <tr>
- * <td>org.eclipse.kura.core.data.transport.mqtt.MqttDataTransport</td>
- * <td>{@link DataTransportService}</td>
- * </tr>
- * </tbody>
- * </table>
- * <br>
- * When a new CloudService is created the factory creates also a DataService and a DataTransportService.
- * Since the <i>pid</i> parameter of {@link #createConfiguration(String)} only specifies the PID of
- * the CloudService layer, a convention is needed to derive the PIDs of the lower layers.
- * <br>
- * <br>
- * The default stack instance is special.
- * For backward compatibility the PIDs of the default stack must be as follows:
- *
- * <table>
- * <thead>
- * <tr>
- * <th>PID (kura.service.pid)</th>
- * <th>Factory PID</th>
- * </tr>
- * </thead>
- * <tbody>
- * <tr>
- * <td>org.eclipse.kura.cloud.CloudService</td>
- * <td>org.eclipse.kura.cloud.CloudService</td>
- * </tr>
- * <tr>
- * <td>org.eclipse.kura.data.DataService</td>
- * <td>org.eclipse.kura.data.DataService</td>
- * </tr>
- * <tr>
- * <td></td>
- * <td>org.eclipse.kura.core.data.transport.mqtt.MqttDataTransport</td>
- * </tr>
- * </tbody>
- * </table>
- * <br>
- *
- * For other stack instances the convention used to generate the PIDs for the lower layers is
- * to use the sub string in the CloudService PID starting after the first occurrence of the '-' character and append
- * the sub string to the PIDs of the default stack above, for example:
- *
- * <table>
- * <thead>
- * <tr>
- * <th>PID (kura.service.pid)</th>
- * <th>Factory PID</th>
- * </tr>
- * </thead>
- * <tbody>
- * <tr>
- * <td>org.eclipse.kura.cloud.CloudService-2</td>
- * <td>org.eclipse.kura.cloud.CloudService</td>
- * </tr>
- * <tr>
- * <td>org.eclipse.kura.data.DataService-2</td>
- * <td>org.eclipse.kura.data.DataService</td>
- * </tr>
- * <tr>
- * <td>org.eclipse.kura.core.data.transport.mqtt.MqttDataTransport-2</td>
- * <td>org.eclipse.kura.core.data.transport.mqtt.MqttDataTransport</td>
- * </tr>
- * </tbody>
- * </table>
- * <br>
- * The (configuration of) layer instances of each stack are persisted to Kura snapshot and
- * recreated at every Kura start.
- * On startup every stack must be properly reassembled with the right layer instances.
- * <br>
- * This can be achieved using a standard OSGi Declarative Services magic property set in a layer configuration
- * specifying the layer dependency on a specific PID of its next lower layer.
- * The following example shows this selective dependency mechanism for the DataService and MqttDataTransport services.
- * <br>
- * The DataService component definition specifies a dependency on a DataTransportService as follows:
- *
- * <pre>
- * &ltreference name="DataTransportService"
- *              bind="setDataTransportService"
- *              unbind="unsetDataTransportService"
- *              cardinality="1..1"
- *              policy="static"
- *              interface="org.eclipse.kura.data.DataTransportService"/&gt
- * </pre>
- *
- * <br>
- * The DataService with PID <i>org.eclipse.kura.data.DataService-2</i> needs to be activated
- * only when its dependency on a specific DataTransportService with
- * PID <i>org.eclipse.kura.core.data.transport.mqtt.MqttDataTransport-2</i> is satisfied.
- * <br>
- * The OSGi Declarative Services specification provides a magic <i>&ltreference name&gt.target</i>
- * property that can be set at runtime to specify a selective dependency.
- * <br>
- * In the above example the <i>org.eclipse.kura.data.DataService-2</i> component instance will have a
- * <i>DataTransportService.target</i> property set to the value:
- *
- * <pre>
- * (kura.service.pid = org.eclipse.kura.core.data.transport.mqtt.MqttDataTransport - 2)
- * </pre>
- *
- * Since {@link org.eclipse.kura.cloud.factory} 1.1.0, the CloudService instance contains a property that maps the
- * instance with the {@link org.eclipse.kura.cloud.factory.CloudServiceFactory} implementation that generated it.
- *
- * <br>
+ * SiteWhere Cloud Service Factory Implementation for Eclipse Kura.
+ * 
+ * @author Jorge Villaverde
  */
 @SuppressWarnings("deprecation")
 public class DefaultCloudServiceFactory implements CloudServiceFactory, CloudConnectionFactory {
