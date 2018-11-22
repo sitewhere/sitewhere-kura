@@ -41,18 +41,7 @@
             default="false"
             description="Default retaing flag for the published messages.">
         </AD>
-        
-        <AD id="message.type"
-            name="Kind of Message"
-            type="String"
-            cardinality="0"
-            required="true"
-            default="data"
-            description="Type of message to be published.">
-            <Option label="Data" value="data" />
-            <Option label="Control" value="control" />
-        </AD>
-            
+                    
         <AD id="priority"
             name="Priority"
             type="Integer"

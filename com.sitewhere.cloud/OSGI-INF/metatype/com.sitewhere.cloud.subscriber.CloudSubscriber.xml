@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (c) 2018 Eurotech and/or its affiliates, and others
-
-     All rights reserved. This program and the accompanying materials
-     are made available under the terms of the Eclipse Public License v1.0
-     which accompanies this distribution, and is available at
-     http://www.eclipse.org/legal/epl-v10.html
-
-    Contributors:
-      Eurotech
-
--->
 <MetaData xmlns="http://www.osgi.org/xmlns/metatype/v1.2.0" localization="en_us">
-    <OCD id="org.eclipse.kura.cloud.subscriber.CloudSubscriber" 
+    <OCD id="com.sitewhere.cloud.subscriber.CloudSubscriber" 
          name="CloudSubscriber" 
          description="The CloudSubscriber allows to define the subscribe topic and notify the associated applications when a subscription event happens.">
         
@@ -58,7 +45,7 @@
         </AD>
     </OCD>
     
-    <Designate pid="org.eclipse.kura.cloud.subscriber.CloudSubscriber" factoryPid="org.eclipse.kura.cloud.subscriber.CloudSubscriber">
-        <Object ocdref="org.eclipse.kura.cloud.subscriber.CloudSubscriber"/>
+    <Designate pid="com.sitewhere.cloud.subscriber.CloudSubscriber" factoryPid="com.sitewhere.cloud.subscriber.CloudSubscriber">
+        <Object ocdref="com.sitewhere.cloud.subscriber.CloudSubscriber"/>
     </Designate>
 </MetaData>

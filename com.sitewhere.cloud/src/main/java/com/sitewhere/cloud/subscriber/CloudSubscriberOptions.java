@@ -1,12 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2018 Eurotech and/or its affiliates and others
+/*
+ * Copyright (c) SiteWhere, LLC. All rights reserved. http://www.sitewhere.com
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- *******************************************************************************/
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 package com.sitewhere.cloud.subscriber;
 
 import java.util.Map;
@@ -14,6 +12,11 @@ import java.util.Map;
 import org.eclipse.kura.cloudconnection.CloudConnectionConstants;
 import org.eclipse.kura.core.message.MessageType;
 
+/**
+ * SiteWhere Cloud Subscription Options for Eclipse Kura.
+ * 
+ * @author Jorge Villaverde
+ */
 public class CloudSubscriberOptions {
 
     private static final Property<String> PROPERTY_CLOUD_SERVICE_PID = new Property<>(

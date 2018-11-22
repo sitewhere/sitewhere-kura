@@ -12,7 +12,6 @@ package com.sitewhere.cloud.publisher;
 import static java.util.Objects.nonNull;
 import static org.eclipse.kura.core.message.MessageConstants.APP_ID;
 import static org.eclipse.kura.core.message.MessageConstants.APP_TOPIC;
-import static org.eclipse.kura.core.message.MessageConstants.CONTROL;
 import static org.eclipse.kura.core.message.MessageConstants.PRIORITY;
 import static org.eclipse.kura.core.message.MessageConstants.QOS;
 import static org.eclipse.kura.core.message.MessageConstants.RETAIN;
@@ -24,7 +23,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Pattern;
 
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -34,7 +32,6 @@ import org.eclipse.kura.cloudconnection.listener.CloudDeliveryListener;
 import org.eclipse.kura.cloudconnection.message.KuraMessage;
 import org.eclipse.kura.cloudconnection.publisher.CloudPublisher;
 import org.eclipse.kura.configuration.ConfigurableComponent;
-import org.eclipse.kura.core.message.MessageType;
 import org.eclipse.kura.message.KuraPayload;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -91,9 +88,6 @@ public class CloudPublisherImpl
     }
 
     private static final Logger logger = LoggerFactory.getLogger(CloudPublisherImpl.class);
-
-    private static final String TOPIC_PATTERN_STRING = "\\$([^\\s/]+)";
-    private static final Pattern TOPIC_PATTERN = Pattern.compile(TOPIC_PATTERN_STRING);
 
     private final Set<CloudConnectionListener> cloudConnectionListeners = new CopyOnWriteArraySet<>();
     private final Set<CloudDeliveryListener> cloudDeliveryListeners = new CopyOnWriteArraySet<>();
@@ -165,7 +159,6 @@ public class CloudPublisherImpl
 	int qos = this.cloudPublisherOptions.getQos();
 	boolean retain = this.cloudPublisherOptions.isRetain();
 	int priority = this.cloudPublisherOptions.getPriority();
-	boolean isControl = MessageType.CONTROL.equals(this.cloudPublisherOptions.getMessageType());
 
 	Map<String, Object> publishMessageProps = new HashMap<>();
 	publishMessageProps.put(APP_TOPIC.name(), appTopic);
@@ -173,7 +166,6 @@ public class CloudPublisherImpl
 	publishMessageProps.put(QOS.name(), qos);
 	publishMessageProps.put(RETAIN.name(), retain);
 	publishMessageProps.put(PRIORITY.name(), priority);
-	publishMessageProps.put(CONTROL.name(), isControl);
 
 	KuraPayload payload = message.getPayload();
 

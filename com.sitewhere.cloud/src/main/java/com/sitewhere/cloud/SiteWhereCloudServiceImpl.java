@@ -1017,7 +1017,8 @@ public class SiteWhereCloudServiceImpl
             return;
         }
 
-        String fullTopic = encodeTopic(appId, CloudServiceOptions.getTopicClientIdToken(), appTopic, isControl);
+        String fullTopic = this.getCloudServiceOptions().getSiteWhereTopic();
+        	//encodeTopic(appId, CloudServiceOptions.getTopicClientIdToken(), appTopic, isControl);
 
         CloudSubscriptionRecord subscriptionRecord = new CloudSubscriptionRecord(fullTopic, qos);
 
@@ -1085,6 +1086,7 @@ public class SiteWhereCloudServiceImpl
         }
     }
 
+    // TODO Remove this is not necessary
     private String encodeTopic(String appId, String deviceId, String appTopic, boolean isControl) {
         StringBuilder sb = new StringBuilder();
         if (isControl) {
