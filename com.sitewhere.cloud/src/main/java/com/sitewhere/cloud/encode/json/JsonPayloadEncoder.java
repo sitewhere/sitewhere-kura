@@ -9,6 +9,8 @@ package com.sitewhere.cloud.encode.json;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import com.eclipsesource.json.Json;
@@ -36,8 +38,11 @@ public abstract class JsonPayloadEncoder extends AbstractPayloadEncoder {
 
     /** SiteWhere JSON Request */
     public static final String REQUEST = "request";
-    
-    
+
+    private static final String JSON_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+
+    private static SimpleDateFormat jsonDateFormat = new SimpleDateFormat(JSON_DATE_PATTERN);
+
     public JsonPayloadEncoder(SiteWherePayload paylaod) {
 	super(paylaod);
     }
@@ -83,5 +88,9 @@ public abstract class JsonPayloadEncoder extends AbstractPayloadEncoder {
 	    jsonMetadata.add(key, value);
 	}
 	json.add(METADATA, jsonMetadata);
+    }
+    
+    protected String formatJsonDate(Date date) {
+	return jsonDateFormat.format(date);
     }
 }

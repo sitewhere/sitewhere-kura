@@ -45,7 +45,7 @@ public class DeviceRegistrationJsonEncoder extends JsonPayloadEncoder {
     }
 
     protected DeviceRegistrationPayload getPayload() {
-	return (DeviceRegistrationPayload)this.getPayload();
+	return (DeviceRegistrationPayload)super.getPayload();
     }
 
     @Override

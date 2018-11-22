@@ -17,6 +17,7 @@ import static org.eclipse.kura.core.message.MessageConstants.PRIORITY;
 import static org.eclipse.kura.core.message.MessageConstants.QOS;
 import static org.eclipse.kura.core.message.MessageConstants.RETAIN;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -177,22 +178,34 @@ public class CloudPublisherImpl
 	KuraPayload payload = message.getPayload();
 
 	Set<String> keys = payload.metricNames();
+	Date timestamp = payload.getTimestamp();
 
 	for (String key : keys) {
 	    Double value;
 	    try {
-		value = (Double) payload.getMetric(key);
+		Object payloadValue = payload.getMetric(key);
+		value = measurementValue(payloadValue);
 		SendMeasurementPayload.Builder builder = SendMeasurementPayload.newBuilder();
-		builder.withDeviceToken(deviceName);
-		builder.withMeasurementId(key);
-		builder.withMeasurementValue(value);
-		builder.withUpdateState(true);
+		builder.withDeviceToken(deviceName).withMeasurementId(key).withMeasurementValue(value)
+			.withUpdateState(true).withEventDate(timestamp.getTime()).withOriginator("kura");
+
 		KuraMessage publishMessage = new KuraMessage(builder.build(), publishMessageProps);
 		this.cloudServiceImpl.publish(publishMessage);
 	    } catch (ClassCastException e) {
 	    }
 	}
 	return null;
+    }
+
+    private Double measurementValue(Object value) {
+	if (value instanceof Number) {
+	    return ((Number) value).doubleValue();
+	}
+	try {
+	    return Double.valueOf(String.valueOf(value));
+	} catch (NumberFormatException e) {
+	}
+	return Double.valueOf(0.0);
     }
 
     private void initCloudConnectionManagerTracking() {

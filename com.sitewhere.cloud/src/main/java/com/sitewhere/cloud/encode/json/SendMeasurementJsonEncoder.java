@@ -7,16 +7,12 @@
  */
 package com.sitewhere.cloud.encode.json;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.kura.message.KuraPayload;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-import com.sitewhere.cloud.encode.PayloadEncoder;
-import com.sitewhere.cloud.payload.DeviceRegistrationPayload;
 import com.sitewhere.cloud.payload.SendMeasurementPayload;
 
 /**
@@ -27,13 +23,19 @@ import com.sitewhere.cloud.payload.SendMeasurementPayload;
 public class SendMeasurementJsonEncoder extends JsonPayloadEncoder {
 
     /** Device Measurements Header Type */
-    private static final String HEADER_TYPE_DEVICE_MEASUREMENTS = "DeviceMeasurements";
+    private static final String HEADER_TYPE_DEVICE_MEASUREMENTS = "DeviceMeasurement";
 
     /** Measurement Id */
-    private static final String MEASUREMENT_ID = "measurementId";
+    private static final String MEASUREMENT_ID = "name";
 
     /** Measurement Value */
-    private static final String MEASUREMENT_VALUE = "measurementValue";
+    private static final String MEASUREMENT_VALUE = "value";
+    
+    /** Event Date */
+    private static final String EVENT_DATE = "eventDate";
+
+    /** Update State */
+    private static final String UPDATE_STATE = "updateState";
     
     public SendMeasurementJsonEncoder(SendMeasurementPayload payload) {
 	super(payload);
@@ -45,7 +47,9 @@ public class SendMeasurementJsonEncoder extends JsonPayloadEncoder {
 
 	jsonRequest.add(MEASUREMENT_ID, getPayload().getMeasurementId());
 	jsonRequest.add(MEASUREMENT_VALUE, String.valueOf(getPayload().getMeasurementValue()));
-
+	jsonRequest.add(EVENT_DATE, formatJsonDate(new Date(getPayload().getEventDate())));
+	jsonRequest.add(UPDATE_STATE, String.valueOf(getPayload().getUpdateState()));
+	
 	return jsonRequest;
     }
 
@@ -56,7 +60,8 @@ public class SendMeasurementJsonEncoder extends JsonPayloadEncoder {
     
     @Override
     protected SendMeasurementPayload getPayload() {
-	return (SendMeasurementPayload)this.getPayload();
+	KuraPayload payload = super.getPayload();
+	return (SendMeasurementPayload)payload;
     }
 
 

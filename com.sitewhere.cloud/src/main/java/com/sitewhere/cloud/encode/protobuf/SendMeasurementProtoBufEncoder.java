@@ -7,15 +7,7 @@
  */
 package com.sitewhere.cloud.encode.protobuf;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.protobuf.MessageLite;
-import com.sitewhere.cloud.encode.PayloadEncoder;
-import com.sitewhere.cloud.payload.DeviceRegistrationPayload;
 import com.sitewhere.cloud.payload.SendMeasurementPayload;
 import com.sitewhere.communication.protobuf.proto.SiteWhere;
 import com.sitewhere.communication.protobuf.proto.SiteWhere.DeviceEvent.Command;

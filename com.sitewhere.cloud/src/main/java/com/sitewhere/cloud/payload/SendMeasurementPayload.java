@@ -75,6 +75,8 @@ public class SendMeasurementPayload extends SiteWherePayload {
 	private boolean updateState;
 	
 	private Map<String, String> metadata;
+	
+	private Long eventDate;
 
 	private Builder() {
 	    super();
@@ -104,6 +106,11 @@ public class SendMeasurementPayload extends SiteWherePayload {
 	    this.updateState = updateState;
 	    return this;
 	}
+	
+	public SendMeasurementPayload.Builder withEventDate(Long eventDate) {
+	    this.eventDate = eventDate;
+	    return this;
+	}
 
 	public SendMeasurementPayload.Builder withMetadata(Map<String, String> metadata) {
 	    this.metadata = metadata;
@@ -124,6 +131,9 @@ public class SendMeasurementPayload extends SiteWherePayload {
 	    if (this.measurementValue != null) {
 		payload.addMetric(MEASUREMENT_VALUE, this.measurementValue);
 	    }
+	    if (this.eventDate != null) {
+		payload.addMetric(EVENT_DATE, this.eventDate);
+	    }	    
 	    if (this.metadata != null) {
 		payload.addMetric(METADATA, metadata);
 	    }
