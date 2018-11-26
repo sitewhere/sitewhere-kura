@@ -28,7 +28,7 @@ public class SendMeasurementProtoBufEncoder extends ProtoBufEncoder {
 
     @Override
     protected Command getCommand() {
-	return Command.SEND_MEASUREMENT;
+	return Command.SendMeasurement;
     }
 
     @Override

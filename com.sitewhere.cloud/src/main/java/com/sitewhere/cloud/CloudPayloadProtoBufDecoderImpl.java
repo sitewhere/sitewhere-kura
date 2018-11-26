@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+
 /**
  * SiteWhere Cloud Service Implementation for Eclipse Kura.
  * 

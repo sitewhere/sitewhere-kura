@@ -8,7 +8,8 @@ Automatic-Module-Name: com.sitewhere.cloud
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/*.xml
 Bundle-ClassPath: .,
- lib/protobuf-java-3.3.0.jar
+ lib/protobuf-java-3.5.1.jar,
+ lib/sitewhere-device-protobuf-2.0.0-SNAPSHOT.jar
 Bundle-ActivationPolicy: lazy
 Import-Package: com.eclipsesource.json;version="0.9.4",
  org.eclipse.kura;version="[1.0,2.0)",

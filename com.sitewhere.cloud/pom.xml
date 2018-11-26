@@ -83,13 +83,30 @@
 			<name>Eclipse Kura Repository - Releases</name>
 			<url>https://repo.eclipse.org/content/repositories/kura-releases/</url>
 		</repository>
+		<repository>
+			<id>sonotype</id>
+			<name>Sonotype Snapshot</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+         	<releases>
+         		<enabled>false</enabled>
+         	</releases>
+         	<snapshots>
+         		<enabled>true</enabled>
+         	</snapshots>
+		</repository>
 	</repositories>
 	<!-- Dependencies -->
 	<dependencies>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>3.3.0</version>
+			<version>3.5.1</version>
+		</dependency>
+		<!-- SiteWhere Device API -->
+		<dependency>
+			<groupId>com.sitewhere</groupId>
+			<artifactId>sitewhere-device-protobuf</artifactId>
+			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<!-- Build -->
@@ -104,37 +121,6 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
-			</plugin>
-			<!-- Protocol Buffer Plugin <plugin> <groupId>org.xolstice.maven.plugins</groupId> 
-				<artifactId>protobuf-maven-plugin</artifactId> <version>0.6.1</version> <configuration> 
-				<protocExecutable>/usr/local/bin/protoc</protocExecutable> </configuration> 
-				<executions> <execution> <goals> <goal>compile</goal> <goal>test-compile</goal> 
-				</goals> </execution> </executions> </plugin> -->
-			<plugin>
-				<groupId>com.github.os72</groupId>
-				<artifactId>protoc-jar-maven-plugin</artifactId>
-				<version>3.3.0</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<!-- <includeDirectories> <include>src/main/protobuf</include> </includeDirectories> -->
-							<inputDirectories>
-								<include>src/main/proto</include>
-							</inputDirectories>
-							<!-- Create java files. And put them in the src/main/java directory. -->
-							<outputTargets>
-								<outputTarget>
-									<type>java</type>
-									<outputDirectory>src/main/java</outputDirectory>
-								</outputTarget>
-							</outputTargets>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<!-- Eclipse Plugin -->
 			<plugin>

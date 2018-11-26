@@ -25,7 +25,7 @@ public class DeviceRegistrationProtoBufEncoder extends ProtoBufEncoder {
 
     @Override
     protected Command getCommand() {
-	return Command.SEND_REGISTRATION;
+	return Command.SendRegistration;
     }
 
     @Override
