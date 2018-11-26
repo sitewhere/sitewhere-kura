@@ -30,15 +30,15 @@ public class DeviceRegistrationProtoBufEncoder extends ProtoBufEncoder {
 
     @Override
     protected MessageLite buildPayload() {	
-	SiteWhere.DeviceEvent.DeviceRegistrationRequest.Builder payloadBuilder =
+	SiteWhere.DeviceEvent.DeviceRegistrationRequest.Builder payload =
 		SiteWhere.DeviceEvent.DeviceRegistrationRequest.newBuilder();
 	
-	payloadBuilder.getAreaTokenBuilder().setValue(getPayload().getAreaToken());
-	payloadBuilder.getCustomerTokenBuilder().setValue(getPayload().getCustomerToken());
-	payloadBuilder.getDeviceTypeTokenBuilder().setValue(getPayload().getDeviceTypeToken());
-	payloadBuilder.putAllMetadata(getPayload().getMetadata());
+	payload.getAreaTokenBuilder().setValue(getPayload().getAreaToken());
+	payload.getCustomerTokenBuilder().setValue(getPayload().getCustomerToken());
+	payload.getDeviceTypeTokenBuilder().setValue(getPayload().getDeviceTypeToken());
+	payload.putAllMetadata(getPayload().getMetadata());
 	
-	return payloadBuilder.build();
+	return payload.build();
     }
 
     @Override

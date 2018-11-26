@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.sitewhere.communication.protobuf.proto.SiteWhere;
 
 
 /**
@@ -57,6 +58,13 @@ public class CloudPayloadProtoBufDecoderImpl {
             }
         }
 
+        SiteWhere.Device.Header header = null;
+        try {
+            header = SiteWhere.Device.Header.parseFrom(this.m_bytes);
+        } catch (InvalidProtocolBufferException ipbe) {
+            throw new KuraInvalidMessageException(ipbe);
+        }
+        
         // build the KuraPayloadProto.KuraPayload
         KuraPayloadProto.KuraPayload protoMsg = null;
         try {
