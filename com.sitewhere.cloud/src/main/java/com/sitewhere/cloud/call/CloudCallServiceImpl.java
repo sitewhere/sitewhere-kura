@@ -13,7 +13,6 @@ package com.sitewhere.cloud.call;
 
 import java.io.IOException;
 
-import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraInvalidMessageException;
 import org.eclipse.kura.KuraStoreException;
@@ -31,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import com.sitewhere.cloud.CloudPayloadProtoBufDecoderImpl;
 import com.sitewhere.cloud.KuraTopicImpl;
-import com.sitewhere.cloud.encode.protobuf.DeviceRegistrationProtoBufEncoder;
 
 @SuppressWarnings("deprecation")
 public class CloudCallServiceImpl implements CloudCallService, DataServiceListener {

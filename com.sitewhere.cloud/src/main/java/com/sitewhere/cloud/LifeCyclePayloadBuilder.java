@@ -38,228 +38,228 @@ import com.sitewhere.cloud.payload.DeviceRegistrationPayload;
  */
 public class LifeCyclePayloadBuilder {
 
-    private static final Logger s_logger = LoggerFactory.getLogger(LifeCyclePayloadBuilder.class);
+	private static final Logger s_logger = LoggerFactory.getLogger(LifeCyclePayloadBuilder.class);
 
-    private static final String ERROR = "ERROR";
+	private static final String ERROR = "ERROR";
 
-    private static final String UNKNOWN = "UNKNOWN";
+	private static final String UNKNOWN = "UNKNOWN";
 
-    private final SiteWhereCloudServiceImpl cloudServiceImpl;
+	private final SiteWhereCloudServiceImpl cloudServiceImpl;
 
-    LifeCyclePayloadBuilder(SiteWhereCloudServiceImpl cloudServiceImpl) {
-        this.cloudServiceImpl = cloudServiceImpl;
-    }
-    
-    public DeviceRegistrationPayload buildDeviceRegistrationPayload() {
-        // build device profile
-        KuraDeviceProfile deviceProfile = buildDeviceProfile();
-        
-        DeviceRegistrationPayload.Builder builder = DeviceRegistrationPayload.newBuilder();
-	
-        // build device name
-        CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
-        String deviceName = cso.getDeviceDisplayName();
-        if (deviceName == null) {
-            deviceName = this.cloudServiceImpl.getSystemService().getDeviceName();
-        }
-        
-        Map<String, String> metadata = new HashMap<>();
+	LifeCyclePayloadBuilder(SiteWhereCloudServiceImpl cloudServiceImpl) {
+		this.cloudServiceImpl = cloudServiceImpl;
+	}
 
-        metadata.put("uptime", deviceProfile.getUptime());
-        metadata.put("display-name", deviceName);
-        metadata.put("model-name", deviceProfile.getModelName());
-        metadata.put("model-id", deviceProfile.getModelId());
-        metadata.put("part-number", deviceProfile.getPartNumber());
-        metadata.put("serial-number", deviceProfile.getSerialNumber());
-        metadata.put("firmware-version", deviceProfile.getFirmwareVersion());
-        metadata.put("bios-version", deviceProfile.getBiosVersion());
-        metadata.put("os-name", deviceProfile.getOs());
-        metadata.put("os-version", deviceProfile.getOsVersion());
-        metadata.put("os-architecture", deviceProfile.getOsArch());
-        metadata.put("jvm-name", deviceProfile.getJvmName());
-        metadata.put("jvm-version", deviceProfile.getJvmVersion());
-        metadata.put("jvm-profile", deviceProfile.getJvmProfile());
-        metadata.put("kura-version", deviceProfile.getKuraVersion());
-        metadata.put("connection-interfaces", deviceProfile.getConnectionInterface());
-        metadata.put("connection-ip", deviceProfile.getConnectionIp());
-        metadata.put("available-proccesors", deviceProfile.getAvailableProcessors());
-        metadata.put("memory-total", deviceProfile.getTotalMemory());
-        metadata.put("osgi-framework", deviceProfile.getOsgiFramework());
-        metadata.put("osgi-framework-version", deviceProfile.getOsgiFrameworkVersion());
-        
-	return builder.withDeviceToken(deviceName)
-	  .withOriginator("device")
-          .withAreaToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationAreaToken())
-          .withCustomerToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationCustomerToken())
-	  .withDeviceTypeToken(this.cloudServiceImpl.getCloudServiceOptions().getDeviceTypeToken())
-	  .withMetadata(metadata )
-	  .build();
-    }
+	@SuppressWarnings("deprecation")
+	public DeviceRegistrationPayload buildDeviceRegistrationPayload() {
+		// build device profile
+		KuraDeviceProfile deviceProfile = buildDeviceProfile();
 
-    public KuraBirthPayload buildBirthPayload() {
-        // build device profile
-        KuraDeviceProfile deviceProfile = buildDeviceProfile();
+		DeviceRegistrationPayload.Builder builder = DeviceRegistrationPayload.newBuilder();
 
-        // build application IDs
-        String appIds = buildApplicationIDs();
+		// build device name
+		CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
+		String deviceName = cso.getDeviceDisplayName();
+		if (deviceName == null) {
+			deviceName = this.cloudServiceImpl.getSystemService().getDeviceName();
+		}
 
-        // build device name
-        CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
-        String deviceName = cso.getDeviceDisplayName();
-        if (deviceName == null) {
-            deviceName = this.cloudServiceImpl.getSystemService().getDeviceName();
-        }
+		Map<String, String> metadata = new HashMap<>();
 
-        String payloadEncoding = this.cloudServiceImpl.getCloudServiceOptions().getPayloadEncoding().name();
+		metadata.put("uptime", deviceProfile.getUptime());
+		metadata.put("display-name", deviceName);
+		metadata.put("model-name", deviceProfile.getModelName());
+		metadata.put("model-id", deviceProfile.getModelId());
+		metadata.put("part-number", deviceProfile.getPartNumber());
+		metadata.put("serial-number", deviceProfile.getSerialNumber());
+		metadata.put("firmware-version", deviceProfile.getFirmwareVersion());
+		metadata.put("bios-version", deviceProfile.getBiosVersion());
+		metadata.put("os-name", deviceProfile.getOs());
+		metadata.put("os-version", deviceProfile.getOsVersion());
+		metadata.put("os-architecture", deviceProfile.getOsArch());
+		metadata.put("jvm-name", deviceProfile.getJvmName());
+		metadata.put("jvm-version", deviceProfile.getJvmVersion());
+		metadata.put("jvm-profile", deviceProfile.getJvmProfile());
+		metadata.put("kura-version", deviceProfile.getKuraVersion());
+		metadata.put("connection-interfaces", deviceProfile.getConnectionInterface());
+		metadata.put("connection-ip", deviceProfile.getConnectionIp());
+		metadata.put("available-proccesors", deviceProfile.getAvailableProcessors());
+		metadata.put("memory-total", deviceProfile.getTotalMemory());
+		metadata.put("osgi-framework", deviceProfile.getOsgiFramework());
+		metadata.put("osgi-framework-version", deviceProfile.getOsgiFrameworkVersion());
 
-        // build birth certificate
-        KuraBirthPayloadBuilder birthPayloadBuilder = new KuraBirthPayloadBuilder();
-        birthPayloadBuilder.withUptime(deviceProfile.getUptime()).withDisplayName(deviceName)
-                .withModelName(deviceProfile.getModelName()).withModelId(deviceProfile.getModelId())
-                .withPartNumber(deviceProfile.getPartNumber()).withSerialNumber(deviceProfile.getSerialNumber())
-                .withFirmwareVersion(deviceProfile.getFirmwareVersion()).withBiosVersion(deviceProfile.getBiosVersion())
-                .withOs(deviceProfile.getOs()).withOsVersion(deviceProfile.getOsVersion())
-                .withJvmName(deviceProfile.getJvmName()).withJvmVersion(deviceProfile.getJvmVersion())
-                .withJvmProfile(deviceProfile.getJvmProfile()).withKuraVersion(deviceProfile.getKuraVersion())
-                .withConnectionInterface(deviceProfile.getConnectionInterface())
-                .withConnectionIp(deviceProfile.getConnectionIp())
-                .withApplicationIdentifiers(appIds).withAvailableProcessors(deviceProfile.getAvailableProcessors())
-                .withTotalMemory(deviceProfile.getTotalMemory()).withOsArch(deviceProfile.getOsArch())
-                .withOsgiFramework(deviceProfile.getOsgiFramework())
-                .withOsgiFrameworkVersion(deviceProfile.getOsgiFrameworkVersion()).withPayloadEncoding(payloadEncoding);
+		return builder.withDeviceToken(deviceName).withOriginator("device")
+				.withAreaToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationAreaToken())
+				.withCustomerToken(this.cloudServiceImpl.getCloudServiceOptions().getApplicationCustomerToken())
+				.withDeviceTypeToken(this.cloudServiceImpl.getCloudServiceOptions().getDeviceTypeToken())
+				.withMetadata(metadata).build();
+	}
 
-        if (this.cloudServiceImpl.imei != null && this.cloudServiceImpl.imei.length() > 0
-                && !this.cloudServiceImpl.imei.equals(ERROR)) {
-            birthPayloadBuilder.withModemImei(this.cloudServiceImpl.imei);
-        }
-        if (this.cloudServiceImpl.iccid != null && this.cloudServiceImpl.iccid.length() > 0
-                && !this.cloudServiceImpl.iccid.equals(ERROR)) {
-            birthPayloadBuilder.withModemIccid(this.cloudServiceImpl.iccid);
-        }
+	@SuppressWarnings("deprecation")
+	public KuraBirthPayload buildBirthPayload() {
+		// build device profile
+		KuraDeviceProfile deviceProfile = buildDeviceProfile();
 
-        if (this.cloudServiceImpl.imsi != null && this.cloudServiceImpl.imsi.length() > 0
-                && !this.cloudServiceImpl.imsi.equals(ERROR)) {
-            birthPayloadBuilder.withModemImsi(this.cloudServiceImpl.imsi);
-        }
+		// build application IDs
+		String appIds = buildApplicationIDs();
 
-        if (this.cloudServiceImpl.rssi != null && this.cloudServiceImpl.rssi.length() > 0) {
-            birthPayloadBuilder.withModemRssi(this.cloudServiceImpl.rssi);
-        }
+		// build device name
+		CloudServiceOptions cso = this.cloudServiceImpl.getCloudServiceOptions();
+		String deviceName = cso.getDeviceDisplayName();
+		if (deviceName == null) {
+			deviceName = this.cloudServiceImpl.getSystemService().getDeviceName();
+		}
 
-        if (deviceProfile.getLatitude() != null && deviceProfile.getLongitude() != null) {
-            KuraPosition kuraPosition = new KuraPosition();
-            kuraPosition.setLatitude(deviceProfile.getLatitude());
-            kuraPosition.setLongitude(deviceProfile.getLongitude());
-            kuraPosition.setAltitude(deviceProfile.getAltitude());
-            birthPayloadBuilder.withPosition(kuraPosition);
-        }
+		String payloadEncoding = this.cloudServiceImpl.getCloudServiceOptions().getPayloadEncoding().name();
 
-        return birthPayloadBuilder.build();
-    }
+		// build birth certificate
+		KuraBirthPayloadBuilder birthPayloadBuilder = new KuraBirthPayloadBuilder();
+		birthPayloadBuilder.withUptime(deviceProfile.getUptime()).withDisplayName(deviceName)
+				.withModelName(deviceProfile.getModelName()).withModelId(deviceProfile.getModelId())
+				.withPartNumber(deviceProfile.getPartNumber()).withSerialNumber(deviceProfile.getSerialNumber())
+				.withFirmwareVersion(deviceProfile.getFirmwareVersion()).withBiosVersion(deviceProfile.getBiosVersion())
+				.withOs(deviceProfile.getOs()).withOsVersion(deviceProfile.getOsVersion())
+				.withJvmName(deviceProfile.getJvmName()).withJvmVersion(deviceProfile.getJvmVersion())
+				.withJvmProfile(deviceProfile.getJvmProfile()).withKuraVersion(deviceProfile.getKuraVersion())
+				.withConnectionInterface(deviceProfile.getConnectionInterface())
+				.withConnectionIp(deviceProfile.getConnectionIp()).withApplicationIdentifiers(appIds)
+				.withAvailableProcessors(deviceProfile.getAvailableProcessors())
+				.withTotalMemory(deviceProfile.getTotalMemory()).withOsArch(deviceProfile.getOsArch())
+				.withOsgiFramework(deviceProfile.getOsgiFramework())
+				.withOsgiFrameworkVersion(deviceProfile.getOsgiFrameworkVersion()).withPayloadEncoding(payloadEncoding);
 
-    public KuraDisconnectPayload buildDisconnectPayload() {
-        SystemService systemService = this.cloudServiceImpl.getSystemService();
-        SystemAdminService sysAdminService = this.cloudServiceImpl.getSystemAdminService();
-        CloudServiceOptions cloudOptions = this.cloudServiceImpl.getCloudServiceOptions();
+		if (this.cloudServiceImpl.imei != null && this.cloudServiceImpl.imei.length() > 0
+				&& !this.cloudServiceImpl.imei.equals(ERROR)) {
+			birthPayloadBuilder.withModemImei(this.cloudServiceImpl.imei);
+		}
+		if (this.cloudServiceImpl.iccid != null && this.cloudServiceImpl.iccid.length() > 0
+				&& !this.cloudServiceImpl.iccid.equals(ERROR)) {
+			birthPayloadBuilder.withModemIccid(this.cloudServiceImpl.iccid);
+		}
 
-        // build device name
-        String deviceName = cloudOptions.getDeviceDisplayName();
-        if (deviceName == null) {
-            deviceName = systemService.getDeviceName();
-        }
+		if (this.cloudServiceImpl.imsi != null && this.cloudServiceImpl.imsi.length() > 0
+				&& !this.cloudServiceImpl.imsi.equals(ERROR)) {
+			birthPayloadBuilder.withModemImsi(this.cloudServiceImpl.imsi);
+		}
 
-        return new KuraDisconnectPayload(sysAdminService.getUptime(), deviceName);
-    }
+		if (this.cloudServiceImpl.rssi != null && this.cloudServiceImpl.rssi.length() > 0) {
+			birthPayloadBuilder.withModemRssi(this.cloudServiceImpl.rssi);
+		}
 
-    public KuraDeviceProfile buildDeviceProfile() {
-        SystemService systemService = this.cloudServiceImpl.getSystemService();
-        SystemAdminService sysAdminService = this.cloudServiceImpl.getSystemAdminService();
-        NetworkService networkService = this.cloudServiceImpl.getNetworkService();
-        PositionService positionService = this.cloudServiceImpl.getPositionService();
+		if (deviceProfile.getLatitude() != null && deviceProfile.getLongitude() != null) {
+			KuraPosition kuraPosition = new KuraPosition();
+			kuraPosition.setLatitude(deviceProfile.getLatitude());
+			kuraPosition.setLongitude(deviceProfile.getLongitude());
+			kuraPosition.setAltitude(deviceProfile.getAltitude());
+			birthPayloadBuilder.withPosition(kuraPosition);
+		}
 
-        //
-        // get the network information
-        StringBuilder sbConnectionIp = null;
-        StringBuilder sbConnectionInterface = null;
-        try {
-            List<NetInterface<? extends NetInterfaceAddress>> nis = networkService.getActiveNetworkInterfaces();
-            if (!nis.isEmpty()) {
-                sbConnectionIp = new StringBuilder();
-                sbConnectionInterface = new StringBuilder();
+		return birthPayloadBuilder.build();
+	}
 
-                for (NetInterface<? extends NetInterfaceAddress> ni : nis) {
-                    List<? extends NetInterfaceAddress> nias = ni.getNetInterfaceAddresses();
-                    if (nias != null && !nias.isEmpty()) {
-                        sbConnectionInterface.append(buildConnectionInterface(ni)).append(",");
-                        sbConnectionIp.append(buildConnectionIp(ni)).append(",");
-                    }
-                }
+	public KuraDisconnectPayload buildDisconnectPayload() {
+		SystemService systemService = this.cloudServiceImpl.getSystemService();
+		SystemAdminService sysAdminService = this.cloudServiceImpl.getSystemAdminService();
+		CloudServiceOptions cloudOptions = this.cloudServiceImpl.getCloudServiceOptions();
 
-                // Remove trailing comma
-                sbConnectionIp.deleteCharAt(sbConnectionIp.length() - 1);
-                sbConnectionInterface.deleteCharAt(sbConnectionInterface.length() - 1);
-            }
-        } catch (Exception se) {
-            s_logger.warn("Error while getting ConnetionIP and ConnectionInterface", se);
-        }
+		// build device name
+		String deviceName = cloudOptions.getDeviceDisplayName();
+		if (deviceName == null) {
+			deviceName = systemService.getDeviceName();
+		}
 
-        String connectionIp = sbConnectionIp != null ? sbConnectionIp.toString() : UNKNOWN;
-        String connectionInterface = sbConnectionInterface != null ? sbConnectionInterface.toString() : UNKNOWN;
+		return new KuraDisconnectPayload(sysAdminService.getUptime(), deviceName);
+	}
 
-        //
-        // get the position information
-        double latitude = 0.0;
-        double longitude = 0.0;
-        double altitude = 0.0;
-        if (positionService != null) {
-            NmeaPosition position = positionService.getNmeaPosition();
-            if (position != null) {
-                latitude = position.getLatitude();
-                longitude = position.getLongitude();
-                altitude = position.getAltitude();
-            } else {
-                s_logger.warn("Unresolved PositionService reference.");
-            }
-        }
+	public KuraDeviceProfile buildDeviceProfile() {
+		SystemService systemService = this.cloudServiceImpl.getSystemService();
+		SystemAdminService sysAdminService = this.cloudServiceImpl.getSystemAdminService();
+		NetworkService networkService = this.cloudServiceImpl.getNetworkService();
+		PositionService positionService = this.cloudServiceImpl.getPositionService();
 
-        //
-        // build the profile
-        return new KuraDeviceProfile(sysAdminService.getUptime(), systemService.getDeviceName(),
-                systemService.getModelName(), systemService.getModelId(), systemService.getPartNumber(),
-                systemService.getSerialNumber(), systemService.getFirmwareVersion(), systemService.getBiosVersion(),
-                systemService.getOsName(), systemService.getOsVersion(), systemService.getJavaVmName(),
-                systemService.getJavaVmVersion() + " " + systemService.getJavaVmInfo(),
-                systemService.getJavaVendor() + " " + systemService.getJavaVersion(), systemService.getKuraVersion(),
-                connectionInterface, connectionIp, latitude, longitude, altitude,
-                String.valueOf(systemService.getNumberOfProcessors()), String.valueOf(systemService.getTotalMemory()),
-                systemService.getOsArch(), systemService.getOsgiFwName(), systemService.getOsgiFwVersion());
-    }
+		//
+		// get the network information
+		StringBuilder sbConnectionIp = null;
+		StringBuilder sbConnectionInterface = null;
+		try {
+			List<NetInterface<? extends NetInterfaceAddress>> nis = networkService.getActiveNetworkInterfaces();
+			if (!nis.isEmpty()) {
+				sbConnectionIp = new StringBuilder();
+				sbConnectionInterface = new StringBuilder();
 
-    private String buildConnectionIp(NetInterface<? extends NetInterfaceAddress> ni) {
-        String connectionIp = UNKNOWN;
-        List<? extends NetInterfaceAddress> nias = ni.getNetInterfaceAddresses();
-        if (nias != null && !nias.isEmpty() && nias.get(0).getAddress() != null) {
-            connectionIp = nias.get(0).getAddress().getHostAddress();
-        }
-        return connectionIp;
-    }
+				for (NetInterface<? extends NetInterfaceAddress> ni : nis) {
+					List<? extends NetInterfaceAddress> nias = ni.getNetInterfaceAddresses();
+					if (nias != null && !nias.isEmpty()) {
+						sbConnectionInterface.append(buildConnectionInterface(ni)).append(",");
+						sbConnectionIp.append(buildConnectionIp(ni)).append(",");
+					}
+				}
 
-    private String buildConnectionInterface(NetInterface<? extends NetInterfaceAddress> ni) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(ni.getName()).append(" (").append(NetUtil.hardwareAddressToString(ni.getHardwareAddress()))
-                .append(")");
-        return sb.toString();
-    }
+				// Remove trailing comma
+				sbConnectionIp.deleteCharAt(sbConnectionIp.length() - 1);
+				sbConnectionInterface.deleteCharAt(sbConnectionInterface.length() - 1);
+			}
+		} catch (Exception se) {
+			s_logger.warn("Error while getting ConnetionIP and ConnectionInterface", se);
+		}
 
-    private String buildApplicationIDs() {
-        String[] appIdArray = this.cloudServiceImpl.getCloudApplicationIdentifiers();
-        StringBuilder sbAppIDs = new StringBuilder();
-        for (int i = 0; i < appIdArray.length; i++) {
-            if (i != 0) {
-                sbAppIDs.append(",");
-            }
-            sbAppIDs.append(appIdArray[i]);
-        }
-        return sbAppIDs.toString();
-    }
- }
+		String connectionIp = sbConnectionIp != null ? sbConnectionIp.toString() : UNKNOWN;
+		String connectionInterface = sbConnectionInterface != null ? sbConnectionInterface.toString() : UNKNOWN;
+
+		//
+		// get the position information
+		double latitude = 0.0;
+		double longitude = 0.0;
+		double altitude = 0.0;
+		if (positionService != null) {
+			NmeaPosition position = positionService.getNmeaPosition();
+			if (position != null) {
+				latitude = position.getLatitude();
+				longitude = position.getLongitude();
+				altitude = position.getAltitude();
+			} else {
+				s_logger.warn("Unresolved PositionService reference.");
+			}
+		}
+
+		//
+		// build the profile
+		return new KuraDeviceProfile(sysAdminService.getUptime(), systemService.getDeviceName(),
+				systemService.getModelName(), systemService.getModelId(), systemService.getPartNumber(),
+				systemService.getSerialNumber(), systemService.getFirmwareVersion(), systemService.getBiosVersion(),
+				systemService.getOsName(), systemService.getOsVersion(), systemService.getJavaVmName(),
+				systemService.getJavaVmVersion() + " " + systemService.getJavaVmInfo(),
+				systemService.getJavaVendor() + " " + systemService.getJavaVersion(), systemService.getKuraVersion(),
+				connectionInterface, connectionIp, latitude, longitude, altitude,
+				String.valueOf(systemService.getNumberOfProcessors()), String.valueOf(systemService.getTotalMemory()),
+				systemService.getOsArch(), systemService.getOsgiFwName(), systemService.getOsgiFwVersion());
+	}
+
+	private String buildConnectionIp(NetInterface<? extends NetInterfaceAddress> ni) {
+		String connectionIp = UNKNOWN;
+		List<? extends NetInterfaceAddress> nias = ni.getNetInterfaceAddresses();
+		if (nias != null && !nias.isEmpty() && nias.get(0).getAddress() != null) {
+			connectionIp = nias.get(0).getAddress().getHostAddress();
+		}
+		return connectionIp;
+	}
+
+	private String buildConnectionInterface(NetInterface<? extends NetInterfaceAddress> ni) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(ni.getName()).append(" (").append(NetUtil.hardwareAddressToString(ni.getHardwareAddress()))
+				.append(")");
+		return sb.toString();
+	}
+
+	private String buildApplicationIDs() {
+		String[] appIdArray = this.cloudServiceImpl.getCloudApplicationIdentifiers();
+		StringBuilder sbAppIDs = new StringBuilder();
+		for (int i = 0; i < appIdArray.length; i++) {
+			if (i != 0) {
+				sbAppIDs.append(",");
+			}
+			sbAppIDs.append(appIdArray[i]);
+		}
+		return sbAppIDs.toString();
+	}
+}

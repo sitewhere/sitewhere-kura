@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/sitewhere-device-protobuf-2.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="lib" path="/Users/jorge/git/sitewhere-kura/com.sitewhere.cloud/lib/protobuf-java-3.5.1.jar" sourcepath="/Users/jorge/.m2/repository/com/google/protobuf/protobuf-java/3.3.0/protobuf-java-3.3.0-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/jorge/git/sitewhere-kura/com.sitewhere.cloud/lib/sitewhere-device-protobuf-2.0.0-20181125.152204-1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/protobuf-java-3.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/sitewhere-device-protobuf-2.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
